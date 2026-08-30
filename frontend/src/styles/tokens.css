@@ -1,0 +1,319 @@
+/*
+ * Lahore+ — Design Tokens
+ *
+ * Centralized design system for all product surfaces.
+ * Public interface, command center interface, maps, charts, alerts, reports.
+ *
+ * Palette: premium civic-tech. No government branding. No AI gradients.
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════
+     PALETTE — Warm civic institutional
+     ═══════════════════════════════════════════════════════════ */
+
+  /* Background — warm off-whites */
+  --lp-bg-primary:    #FBF9F6;
+  --lp-bg-secondary:  #F5F2ED;
+  --lp-bg-tertiary:   #EDE9E3;
+  --lp-bg-surface:    #FFFFFF;
+  --lp-bg-elevated:   #FFFFFF;
+
+  /* Text — charcoal / near-black */
+  --lp-text-primary:   #1A1A1A;
+  --lp-text-secondary: #4A4540;
+  --lp-text-tertiary:  #7A7570;
+  --lp-text-muted:     #A09A93;
+  --lp-text-inverse:   #FFFFFF;
+
+  /* Brand — Deep teal (intelligence, trust, technology) */
+  --lp-brand-50:   #F0FDFA;
+  --lp-brand-100:  #CCFBF1;
+  --lp-brand-200:  #99F6E4;
+  --lp-brand-300:  #5EEAD4;
+  --lp-brand-400:  #2DD4BF;
+  --lp-brand-500:  #14B8A6;
+  --lp-brand-600:  #0D9488;
+  --lp-brand-700:  #0F766E;
+  --lp-brand-800:  #115E59;
+  --lp-brand-900:  #134E4A;
+
+  /* Sandstone / Terracotta accent */
+  --lp-accent-50:   #FDF8F3;
+  --lp-accent-100:  #F5E6D3;
+  --lp-accent-200:  #E8CBA7;
+  --lp-accent-300:  #D4A574;
+  --lp-accent-400:  #C08A50;
+  --lp-accent-500:  #A87040;
+  --lp-accent-600:  #8B5A30;
+  --lp-accent-700:  #6E4725;
+  --lp-accent-800:  #52351C;
+  --lp-accent-900:  #3A2614;
+
+  /* Slate — neutral grays */
+  --lp-slate-50:   #F8F7F5;
+  --lp-slate-100:  #F0EFEC;
+  --lp-slate-200:  #E2E0DB;
+  --lp-slate-300:  #CCC9C2;
+  --lp-slate-400:  #A09A93;
+  --lp-slate-500:  #7A7570;
+  --lp-slate-600:  #5A5550;
+  --lp-slate-700:  #3A3530;
+  --lp-slate-800:  #252220;
+  --lp-slate-900:  #1A1715;
+  --lp-slate-950:  #0D0B0A;
+
+  /* Pollution Severity — semantic, NOT decorative */
+  --lp-severity-good:        #22C55E;
+  --lp-severity-good-bg:     #F0FDF4;
+  --lp-severity-fair:        #84CC16;
+  --lp-severity-fair-bg:     #F7FEE7;
+  --lp-severity-moderate:    #EAB308;
+  --lp-severity-moderate-bg: #FEFCE8;
+  --lp-severity-usg:         #F97316;
+  --lp-severity-usg-bg:      #FFF7ED;
+  --lp-severity-unhealthy:   #EF4444;
+  --lp-severity-unhealthy-bg:#FEF2F2;
+  --lp-severity-very-unhealthy: #DC2626;
+  --lp-severity-very-unhealthy-bg: #FEF2F2;
+  --lp-severity-hazardous:   #7F1D1D;
+  --lp-severity-hazardous-bg:#FEF2F2;
+
+  /* Interactive */
+  --lp-interactive:     #0D9488;
+  --lp-interactive-hover: #0F766E;
+  --lp-interactive-active: #115E59;
+  --lp-link:            #0F766E;
+  --lp-link-hover:      #115E59;
+
+  /* Borders */
+  --lp-border-subtle:  #E8E5E0;
+  --lp-border-default: #DDD9D3;
+  --lp-border-strong:  #C8C3BB;
+
+  /* ═══════════════════════════════════════════════════════════
+     TYPOGRAPHY
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --lp-font-mono: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+  --lp-font-display: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Sizes */
+  --lp-text-2xs:  0.625rem;   /* 10px */
+  --lp-text-xs:   0.75rem;    /* 12px */
+  --lp-text-sm:   0.8125rem;  /* 13px */
+  --lp-text-base: 0.875rem;   /* 14px */
+  --lp-text-md:   1rem;       /* 16px */
+  --lp-text-lg:   1.125rem;   /* 18px */
+  --lp-text-xl:   1.25rem;    /* 20px */
+  --lp-text-2xl:  1.5rem;     /* 24px */
+  --lp-text-3xl:  1.875rem;   /* 30px */
+  --lp-text-4xl:  2.25rem;    /* 36px */
+  --lp-text-5xl:  3rem;       /* 48px */
+  --lp-text-6xl:  3.75rem;    /* 60px — metric hero numbers */
+
+  /* Weights */
+  --lp-weight-normal:   400;
+  --lp-weight-medium:   500;
+  --lp-weight-semibold: 600;
+  --lp-weight-bold:     700;
+
+  /* Line heights */
+  --lp-leading-none:    1;
+  --lp-leading-tight:   1.25;
+  --lp-leading-snug:    1.375;
+  --lp-leading-normal:  1.5;
+  --lp-leading-relaxed: 1.625;
+  --lp-leading-loose:   1.75;
+
+  /* Letter spacing */
+  --lp-tracking-tight:  -0.025em;
+  --lp-tracking-normal: 0;
+  --lp-tracking-wide:   0.025em;
+  --lp-tracking-wider:  0.05em;
+  --lp-tracking-widest: 0.1em;
+
+  /* ═══════════════════════════════════════════════════════════
+     SPACING
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-space-0:   0;
+  --lp-space-px:  1px;
+  --lp-space-0_5: 0.125rem;  /* 2px */
+  --lp-space-1:   0.25rem;   /* 4px */
+  --lp-space-1_5: 0.375rem;  /* 6px */
+  --lp-space-2:   0.5rem;    /* 8px */
+  --lp-space-3:   0.75rem;   /* 12px */
+  --lp-space-4:   1rem;      /* 16px */
+  --lp-space-5:   1.25rem;   /* 20px */
+  --lp-space-6:   1.5rem;    /* 24px */
+  --lp-space-8:   2rem;      /* 32px */
+  --lp-space-10:  2.5rem;    /* 40px */
+  --lp-space-12:  3rem;      /* 48px */
+  --lp-space-16:  4rem;      /* 64px */
+  --lp-space-20:  5rem;      /* 80px */
+  --lp-space-24:  6rem;      /* 96px */
+
+  /* ═══════════════════════════════════════════════════════════
+     BORDER RADIUS
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-radius-none: 0;
+  --lp-radius-sm:   4px;
+  --lp-radius-md:   6px;
+  --lp-radius-lg:   8px;
+  --lp-radius-xl:   12px;
+  --lp-radius-2xl:  16px;
+  --lp-radius-full: 9999px;
+
+  /* ═══════════════════════════════════════════════════════════
+     SHADOWS — extremely restrained
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-shadow-none:   none;
+  --lp-shadow-xs:     0 1px 2px rgba(26, 26, 26, 0.04);
+  --lp-shadow-sm:     0 1px 3px rgba(26, 26, 26, 0.06), 0 1px 2px rgba(26, 26, 26, 0.04);
+  --lp-shadow-md:     0 4px 6px -1px rgba(26, 26, 26, 0.06), 0 2px 4px -2px rgba(26, 26, 26, 0.04);
+  --lp-shadow-lg:     0 10px 15px -3px rgba(26, 26, 26, 0.06), 0 4px 6px -4px rgba(26, 26, 26, 0.04);
+  --lp-shadow-xl:     0 20px 25px -5px rgba(26, 26, 26, 0.08), 0 8px 10px -6px rgba(26, 26, 26, 0.04);
+
+  /* ═══════════════════════════════════════════════════════════
+     TRANSITIONS
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-transition-fast:   100ms ease;
+  --lp-transition-base:   150ms ease;
+  --lp-transition-normal: 250ms ease;
+  --lp-transition-slow:   400ms ease;
+  --lp-transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ═══════════════════════════════════════════════════════════
+     LAYOUT
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-header-height: 56px;
+  --lp-nav-height:    44px;
+  --lp-shell-max:     1440px;
+  --lp-content-max:   1200px;
+  --lp-sidebar-width: 260px;
+
+  /* ═══════════════════════════════════════════════════════════
+     ICON SIZING
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-icon-xs:  14px;
+  --lp-icon-sm:  16px;
+  --lp-icon-md:  20px;
+  --lp-icon-lg:  24px;
+  --lp-icon-xl:  32px;
+  --lp-icon-2xl: 48px;
+
+  /* ═══════════════════════════════════════════════════════════
+     Z-INDEX SCALE
+     ═══════════════════════════════════════════════════════════ */
+
+  --lp-z-base:    0;
+  --lp-z-elevated: 10;
+  --lp-z-dropdown: 100;
+  --lp-z-sticky:  200;
+  --lp-z-overlay: 300;
+  --lp-z-modal:   400;
+  --lp-z-toast:   500;
+
+  /* ═══════════════════════════════════════════════════════════
+     BACKWARDS COMPATIBILITY — map old tokens to new
+     ═══════════════════════════════════════════════════════════ */
+
+  --slate-50:  var(--lp-slate-50);
+  --slate-100: var(--lp-slate-100);
+  --slate-200: var(--lp-slate-200);
+  --slate-300: var(--lp-slate-300);
+  --slate-400: var(--lp-slate-400);
+  --slate-500: var(--lp-slate-500);
+  --slate-600: var(--lp-slate-600);
+  --slate-700: var(--lp-slate-700);
+  --slate-800: var(--lp-slate-800);
+  --slate-900: var(--lp-slate-900);
+  --slate-950: var(--lp-slate-950);
+
+  --brand-50:  var(--lp-brand-50);
+  --brand-100: var(--lp-brand-100);
+  --brand-600: var(--lp-brand-600);
+  --brand-700: var(--lp-brand-700);
+
+  --blue-50:  #EFF6FF;
+  --blue-600: #2563EB;
+  --blue-700: #1D4ED8;
+
+  --green-600: var(--lp-severity-good);
+  --green-50:  var(--lp-severity-good-bg);
+  --lime-600:  var(--lp-severity-fair);
+  --lime-50:   var(--lp-severity-fair-bg);
+  --yellow-600: var(--lp-severity-moderate);
+  --yellow-50:  var(--lp-severity-moderate-bg);
+  --orange-600: var(--lp-severity-usg);
+  --orange-50:  var(--lp-severity-usg-bg);
+  --red-600:    var(--lp-severity-unhealthy);
+  --red-50:     var(--lp-severity-unhealthy-bg);
+  --red-900:    var(--lp-severity-hazardous);
+
+  --online:  var(--lp-severity-good);
+  --offline: var(--lp-severity-unhealthy);
+  --warn:    var(--lp-severity-moderate);
+
+  --font-sans: var(--lp-font-sans);
+  --font-mono: var(--lp-font-mono);
+
+  --text-xs:   var(--lp-text-xs);
+  --text-sm:   var(--lp-text-sm);
+  --text-base: var(--lp-text-base);
+  --text-md:   var(--lp-text-md);
+  --text-lg:   var(--lp-text-lg);
+  --text-xl:   var(--lp-text-xl);
+  --text-2xl:  var(--lp-text-2xl);
+  --text-3xl:  var(--lp-text-3xl);
+  --text-4xl:  var(--lp-text-4xl);
+
+  --weight-normal:   var(--lp-weight-normal);
+  --weight-medium:   var(--lp-weight-medium);
+  --weight-semibold: var(--lp-weight-semibold);
+  --weight-bold:     var(--lp-weight-bold);
+
+  --leading-tight:   var(--lp-leading-tight);
+  --leading-normal:  var(--lp-leading-normal);
+  --leading-relaxed: var(--lp-leading-relaxed);
+
+  --sp-1:  var(--lp-space-1);
+  --sp-2:  var(--lp-space-2);
+  --sp-3:  var(--lp-space-3);
+  --sp-4:  var(--lp-space-4);
+  --sp-5:  var(--lp-space-5);
+  --sp-6:  var(--lp-space-6);
+  --sp-8:  var(--lp-space-8);
+  --sp-10: var(--lp-space-10);
+  --sp-12: var(--lp-space-12);
+
+  --surface-bg:     var(--lp-bg-surface);
+  --surface-raised: var(--lp-bg-surface);
+  --surface-sunken: var(--lp-bg-secondary);
+  --surface-border: var(--lp-border-subtle);
+  --surface-hover:  var(--lp-bg-secondary);
+
+  --border-subtle: 1px solid var(--lp-border-subtle);
+  --border-strong: 1px solid var(--lp-border-default);
+
+  --radius-sm: var(--lp-radius-sm);
+  --radius-md: var(--lp-radius-md);
+
+  --shadow-sm: var(--lp-shadow-sm);
+  --shadow-md: var(--lp-shadow-md);
+  --shadow-lg: var(--lp-shadow-lg);
+
+  --sidebar-width: var(--lp-sidebar-width);
+  --header-height: var(--lp-header-height);
+  --content-max:   var(--lp-content-max);
+
+  --transition-fast:   var(--lp-transition-fast);
+  --transition-normal: var(--lp-transition-normal);
+}

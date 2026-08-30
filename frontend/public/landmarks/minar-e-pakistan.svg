@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="msky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8d56a" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1a2e1a"/>
+    </linearGradient>
+    <linearGradient id="minar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#msky)"/>
+  <rect y="380" width="800" height="120" fill="#1a2e1a" opacity="0.6"/>
+  <!-- Base platform -->
+  <rect x="320" y="340" width="160" height="40" fill="#c49464" opacity="0.6" rx="2"/>
+  <rect x="340" y="320" width="120" height="25" fill="#c49464" opacity="0.5" rx="2"/>
+  <!-- Minar shaft -->
+  <rect x="378" y="100" width="44" height="220" fill="url(#minar)" opacity="0.75" rx="2"/>
+  <!-- Bands -->
+  <rect x="375" y="180" width="50" height="6" fill="#d4a574" opacity="0.5" rx="1"/>
+  <rect x="375" y="240" width="50" height="6" fill="#d4a574" opacity="0.5" rx="1"/>
+  <rect x="372" y="290" width="56" height="8" fill="#d4a574" opacity="0.5" rx="1"/>
+  <!-- Observation deck -->
+  <rect x="368" y="90" width="64" height="18" fill="#c49464" opacity="0.6" rx="2"/>
+  <rect x="372" y="85" width="56" height="10" fill="#c49464" opacity="0.5" rx="1"/>
+  <!-- Dome/crown -->
+  <ellipse cx="400" cy="78" rx="25" ry="18" fill="#c49464" opacity="0.5"/>
+  <!-- Finial -->
+  <line x1="400" y1="60" x2="400" y2="40" stroke="#d4a574" stroke-width="2" opacity="0.6"/>
+  <circle cx="400" cy="36" r="5" fill="#d4a574" opacity="0.5"/>
+  <!-- Crescent -->
+  <path d="M393 30 A7 7 0 1 1 407 30 A5 5 0 1 0 393 30" fill="#d4a574" opacity="0.4"/>
+  <!-- Base petals -->
+  <path d="M320 340 Q360 300 400 340" fill="#c49464" opacity="0.35"/>
+  <path d="M400 340 Q440 300 480 340" fill="#c49464" opacity="0.35"/>
+  <path d="M280 380 Q340 330 400 380" fill="#c49464" opacity="0.25"/>
+  <path d="M400 380 Q460 330 520 380" fill="#c49464" opacity="0.25"/>
+  <!-- Trees -->
+  <circle cx="200" cy="360" r="25" fill="#2d7a2d" opacity="0.3"/>
+  <circle cx="240" cy="355" r="20" fill="#2d7a2d" opacity="0.25"/>
+  <circle cx="580" cy="358" r="22" fill="#2d7a2d" opacity="0.3"/>
+  <circle cx="620" cy="362" r="18" fill="#2d7a2d" opacity="0.25"/>
+  <!-- Sun glow -->
+  <circle cx="600" cy="80" r="50" fill="#f8d56a" opacity="0.1"/>
+  <circle cx="600" cy="80" r="30" fill="#f8d56a" opacity="0.15"/>
+</svg>

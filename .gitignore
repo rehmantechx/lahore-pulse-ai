@@ -1,0 +1,76 @@
+# === Lahore Pulse AI ===
+
+# Environment & secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Node
+node_modules/
+
+# Vite cache
+.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing & coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Database (too large for git — populated via collection scripts)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite3
+
+# Root data dir (stale dev artifacts — real data is in backend/data/)
+/data/
+
+# Audit reports (generated, not application code)
+docs/*_AUDIT*.md
+docs/E2E_*.md
+
+# Dev scripts (diagnostic, not application code)
+backend/_*.py
+scripts/e2e_*.ps1
+
+# Temporary test outputs
+backend/test_results.txt
+backend/test_full.txt

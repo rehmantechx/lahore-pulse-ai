@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="wsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8a94e" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#1a2e1a"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#1e3a5f" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#wsky)"/>
+  <rect y="380" width="800" height="120" fill="#1a2e1a" opacity="0.6"/>
+  <!-- Main mosque body -->
+  <rect x="220" y="230" width="360" height="150" fill="url(#tile)" opacity="0.6" rx="2"/>
+  <!-- Central dome -->
+  <ellipse cx="400" cy="225" rx="80" ry="55" fill="#3b82f6" opacity="0.35"/>
+  <ellipse cx="400" cy="220" rx="70" ry="45" fill="#60a5fa" opacity="0.25"/>
+  <!-- Dome finial -->
+  <line x1="400" y1="170" x2="400" y2="145" stroke="#60a5fa" stroke-width="2" opacity="0.5"/>
+  <circle cx="400" cy="140" r="6" fill="#60a5fa" opacity="0.5"/>
+  <!-- Left minaret -->
+  <rect x="185" y="190" width="22" height="190" fill="url(#tile)" opacity="0.5" rx="2"/>
+  <ellipse cx="196" cy="185" rx="16" ry="22" fill="#3b82f6" opacity="0.4"/>
+  <!-- Right minaret -->
+  <rect x="593" y="190" width="22" height="190" fill="url(#tile)" opacity="0.5" rx="2"/>
+  <ellipse cx="604" cy="185" rx="16" ry="22" fill="#3b82f6" opacity="0.4"/>
+  <!-- Tile patterns (kashi-kari) -->
+  <g opacity="0.3" fill="none" stroke="#60a5fa" stroke-width="1">
+    <rect x="250" y="260" width="40" height="40" rx="2"/>
+    <rect x="300" y="260" width="40" height="40" rx="2"/>
+    <rect x="350" y="260" width="40" height="40" rx="2"/>
+    <rect x="400" y="260" width="40" height="40" rx="2"/>
+    <rect x="450" y="260" width="40" height="40" rx="2"/>
+    <rect x="500" y="260" width="40" height="40" rx="2"/>
+    <rect x="250" y="310" width="40" height="40" rx="2"/>
+    <rect x="300" y="310" width="40" height="40" rx="2"/>
+    <rect x="350" y="310" width="40" height="40" rx="2"/>
+    <rect x="400" y="310" width="40" height="40" rx="2"/>
+    <rect x="450" y="310" width="40" height="40" rx="2"/>
+    <rect x="500" y="310" width="40" height="40" rx="2"/>
+  </g>
+  <!-- Arches -->
+  <path d="M300 380 Q300 340 330 340 Q360 340 360 380" fill="#1a2e1a" opacity="0.3"/>
+  <path d="M370 380 Q370 330 400 330 Q430 330 430 380" fill="#1a2e1a" opacity="0.3"/>
+  <path d="M440 380 Q440 340 470 340 Q500 340 500 380" fill="#1a2e1a" opacity="0.3"/>
+  <!-- Sun -->
+  <circle cx="620" cy="90" r="45" fill="#f8d56a" opacity="0.12"/>
+</svg>

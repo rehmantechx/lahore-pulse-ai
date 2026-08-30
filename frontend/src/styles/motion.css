@@ -1,0 +1,569 @@
+/**
+ * motion.css — Phase 10 Motion & Transition Utilities
+ *
+ * Reusable animation classes for the Lahore+ interface.
+ * All decorative animation respects prefers-reduced-motion.
+ *
+ * Design Principles:
+ * - Restrained, professional, government decision-support
+ * - Communicates state change without delay
+ * - No flashy effects, bouncing, or excessive pulsing
+ * - Easing: cubic-bezier(0.22, 1, 0.36, 1) — custom ease-out
+ */
+
+/* ═══════════════════════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Fade in with slight upward movement — section reveal */
+@keyframes lp-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade in only — for elements that should not shift */
+@keyframes lp-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Subtle scale-in for emphasis elements */
+@keyframes lp-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Stagger delay helper — applied via animation-delay on children */
+@keyframes lp-stagger-item {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Status value update flash */
+@keyframes lp-value-flash {
+  0% { color: inherit; }
+  25% { color: var(--lp-brand-400); }
+  100% { color: inherit; }
+}
+
+/* Gentle highlight pulse for newly active elements */
+@keyframes lp-highlight-glow {
+  0% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.15); }
+  50% { box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1); }
+  100% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0); }
+}
+
+/* Connector line draw-in for decision trace */
+@keyframes lp-line-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Page/section entrance — deeper fade for major content areas */
+@keyframes lp-section-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Status pulse — subtle breathing for active indicators */
+@keyframes lp-status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+/* Card depth entrance — scale + fade for metric cards */
+@keyframes lp-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Linear reveal for progress bars and connectors */
+@keyframes lp-reveal-right {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Subtle rotate-in for icons */
+@keyframes lp-icon-enter {
+  from {
+    opacity: 0;
+    transform: rotate(-8deg) scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+/* Confidence fill — for confidence bars */
+@keyframes lp-confidence-fill {
+  from { width: 0; }
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   ANIMATION UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Section reveal: fade-up entrance */
+.lp-motion-fade-up {
+  animation: lp-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Simple fade-in */
+.lp-motion-fade-in {
+  animation: lp-fade-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Scale-in for emphasis/alerts */
+.lp-motion-scale-in {
+  animation: lp-scale-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Stagger container: children animate in sequence */
+.lp-motion-stagger > * {
+  animation: lp-stagger-item 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lp-motion-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.lp-motion-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.lp-motion-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.lp-motion-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.lp-motion-stagger > *:nth-child(5) { animation-delay: 200ms; }
+.lp-motion-stagger > *:nth-child(6) { animation-delay: 250ms; }
+.lp-motion-stagger > *:nth-child(7) { animation-delay: 300ms; }
+.lp-motion-stagger > *:nth-child(8) { animation-delay: 350ms; }
+
+/* Value update flash animation */
+.lp-motion-value-flash {
+  animation: lp-value-flash 600ms ease;
+}
+
+/* Highlight glow for newly activated elements */
+.lp-motion-highlight {
+  animation: lp-highlight-glow 800ms ease-out;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   TRANSITION UTILITY CLASSES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Smooth content transition — for crossfading demo step content */
+.lp-transition-content {
+  transition: opacity 300ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.lp-transition-content--exiting {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+.lp-transition-content--entering {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card elevation on hover */
+.lp-transition-card {
+  transition: box-shadow 200ms ease,
+              transform 200ms ease,
+              border-color 200ms ease;
+}
+
+/* Status transition */
+.lp-transition-status {
+  transition: color 300ms ease,
+              background-color 300ms ease,
+              border-color 300ms ease;
+}
+
+/* Opacity layer activation for map geometry */
+.lp-transition-layer {
+  transition: opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   DEMO STEP TRANSITION STATES
+   ═══════════════════════════════════════════════════════════ */
+
+/* Applied by DemoController when step changes */
+.demo-step-transition-enter {
+  animation: lp-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Sections that become visible in demo mode get this */
+.demo-section-reveal {
+  animation: lp-fade-up 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Investigation evidence chain stagger */
+.demo-investigation-stagger > .decision-trace__stage {
+  animation: lp-stagger-item 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-investigation-stagger > .decision-trace__stage:nth-child(1) { animation-delay: 0ms; }
+.demo-investigation-stagger > .decision-trace__stage:nth-child(2) { animation-delay: 80ms; }
+.demo-investigation-stagger > .decision-trace__stage:nth-child(3) { animation-delay: 160ms; }
+.demo-investigation-stagger > .decision-trace__stage:nth-child(4) { animation-delay: 240ms; }
+.demo-investigation-stagger > .decision-trace__stage:nth-child(5) { animation-delay: 320ms; }
+.demo-investigation-stagger > .decision-trace__stage:nth-child(6) { animation-delay: 400ms; }
+
+/* Verification state transition */
+.demo-verification-transition {
+  animation: lp-scale-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Exposure map activation layers */
+.demo-exposure-layer {
+  opacity: 0;
+  animation: lp-fade-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-exposure-layer:nth-child(1) { animation-delay: 100ms; }
+.demo-exposure-layer:nth-child(2) { animation-delay: 250ms; }
+.demo-exposure-layer:nth-child(3) { animation-delay: 400ms; }
+.demo-exposure-layer:nth-child(4) { animation-delay: 550ms; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   MICRO-INTERACTIONS
+   ═══════════════════════════════════════════════════════════ */
+
+/* Card hover elevation — subtle lift */
+.lp-hover-lift {
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+.lp-hover-lift:hover {
+  box-shadow: var(--lp-shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Button press feedback */
+.lp-press-feedback {
+  transition: transform 100ms ease, box-shadow 100ms ease;
+}
+.lp-press-feedback:active {
+  transform: scale(0.98);
+}
+
+/* Focus ring — consistent across interactive elements */
+.lp-focus-ring:focus-visible {
+  outline: 2px solid var(--lp-brand-500);
+  outline-offset: 2px;
+}
+
+/* Smooth border highlight for interactive elements */
+.lp-border-glow {
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.lp-border-glow:hover {
+  border-color: var(--lp-brand-300);
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   SKELETON / LOADING ENHANCEMENT
+   ═══════════════════════════════════════════════════════════ */
+
+/* Content fade-in after skeleton */
+.lp-content-reveal {
+  animation: lp-fade-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Skeleton to content transition wrapper */
+.lp-skeleton-to-content {
+  transition: opacity 300ms ease;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   PHASE 20 — PREMIUM MOTION ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Section Entrance ──────────────────────────────────── */
+/* Major content sections — deeper movement than micro items */
+.lp-section-enter {
+  animation: lp-section-enter 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Stagger Containers (Extended) ─────────────────────── */
+/* 12-child stagger for lists with more items */
+.lp-motion-stagger-lg > * {
+  animation: lp-stagger-item 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.lp-motion-stagger-lg > *:nth-child(1) { animation-delay: 0ms; }
+.lp-motion-stagger-lg > *:nth-child(2) { animation-delay: 40ms; }
+.lp-motion-stagger-lg > *:nth-child(3) { animation-delay: 80ms; }
+.lp-motion-stagger-lg > *:nth-child(4) { animation-delay: 120ms; }
+.lp-motion-stagger-lg > *:nth-child(5) { animation-delay: 160ms; }
+.lp-motion-stagger-lg > *:nth-child(6) { animation-delay: 200ms; }
+.lp-motion-stagger-lg > *:nth-child(7) { animation-delay: 240ms; }
+.lp-motion-stagger-lg > *:nth-child(8) { animation-delay: 280ms; }
+.lp-motion-stagger-lg > *:nth-child(9) { animation-delay: 320ms; }
+.lp-motion-stagger-lg > *:nth-child(10) { animation-delay: 360ms; }
+.lp-motion-stagger-lg > *:nth-child(11) { animation-delay: 400ms; }
+.lp-motion-stagger-lg > *:nth-child(12) { animation-delay: 440ms; }
+
+/* ── Card Depth & Hover ────────────────────────────────── */
+/* Premium card with 3D depth hint on hover */
+.lp-card-depth {
+  transition: box-shadow 250ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 200ms ease;
+  will-change: transform, box-shadow;
+}
+.lp-card-depth:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  transform: translateY(-2px);
+  border-color: var(--lp-brand-200, #99f6e4);
+}
+
+/* Card entrance animation — for staggered card grids */
+.lp-card-enter {
+  animation: lp-card-enter 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Status Indicators ─────────────────────────────────── */
+/* Active investigation pulse — restrained, professional */
+.lp-status-active {
+  animation: lp-status-pulse 3s ease-in-out infinite;
+}
+
+/* Status dot with smooth transition */
+.lp-status-dot-animate {
+  transition: background-color 400ms ease, box-shadow 400ms ease;
+}
+
+/* ── Icon Animations ───────────────────────────────────── */
+/* Subtle icon entrance for section labels */
+.lp-icon-enter {
+  animation: lp-icon-enter 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Progress / Confidence ─────────────────────────────── */
+/* Confidence bar fill animation */
+.lp-confidence-fill {
+  animation: lp-confidence-fill 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left;
+}
+
+/* Progress bar reveal */
+.lp-reveal-right {
+  animation: lp-reveal-right 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left;
+}
+
+/* ── Micro-Interaction Enhancements ────────────────────── */
+/* Interactive element — subtle scale on hover */
+.lp-hover-scale {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 200ms ease;
+}
+.lp-hover-scale:hover {
+  transform: scale(1.01);
+}
+
+/* Button with refined press feedback */
+.lp-btn-premium {
+  transition: all 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.lp-btn-premium:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.lp-btn-premium:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Demo-Specific Enhancements ────────────────────────── */
+/* Step semantic transitions — communicates story progression */
+.demo-step-detection {
+  animation: lp-scale-in 350ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-step-investigation {
+  animation: lp-fade-up 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-step-evidence {
+  animation: lp-section-enter 450ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.demo-step-verification {
+  animation: lp-scale-in 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── 3D / Depth Effects ────────────────────────────────── */
+/* Subtle perspective container for depth hierarchy */
+.lp-depth-container {
+  perspective: 1200px;
+}
+
+/* Card with 3D tilt on hover — restrained */
+.lp-tilt-hover {
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 250ms cubic-bezier(0.22, 1, 0.36, 1);
+  transform-style: preserve-3d;
+}
+.lp-tilt-hover:hover {
+  transform: translateZ(4px) translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Elevated surface with z-depth layers */
+.lp-elevated-1 {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.lp-elevated-2 {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.lp-elevated-3 {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* Loading state pulse for status indicators */
+.lp-loading-pulse {
+  animation: lp-highlight-glow 2s ease-in-out infinite;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   PAGE TRANSITIONS — Polished route-level navigation
+   ═══════════════════════════════════════════════════════════ */
+
+@keyframes lp-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lp-page-transition {
+  animation: lp-page-enter 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  will-change: opacity, transform;
+}
+
+/* Trust CTA — signature interaction element */
+.cc-trust-cta {
+  animation: lp-fade-up 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: border-color 200ms ease, background 200ms ease, box-shadow 200ms ease;
+}
+.cc-trust-cta:hover {
+  box-shadow: 0 0 0 1px var(--lp-accent, #facc15);
+}
+.cc-trust-cta:focus-visible {
+  outline: 2px solid var(--lp-accent, #facc15);
+  outline-offset: 2px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   REDUCED MOTION — overrides all decorative animations
+   ═══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable all animation-based classes */
+  .lp-motion-fade-up,
+  .lp-motion-fade-in,
+  .lp-motion-scale-in,
+  .lp-motion-stagger > *,
+  .lp-motion-stagger-lg > *,
+  .lp-motion-value-flash,
+  .lp-motion-highlight,
+  .lp-section-enter,
+  .lp-card-enter,
+  .lp-status-active,
+  .lp-icon-enter,
+  .lp-confidence-fill,
+  .lp-reveal-right,
+  .lp-tilt-hover,
+  .lp-page-transition,
+  .demo-step-transition-enter,
+  .demo-section-reveal,
+  .demo-investigation-stagger > .decision-trace__stage,
+  .demo-verification-transition,
+  .demo-exposure-layer,
+  .demo-step-detection,
+  .demo-step-investigation,
+  .demo-step-evidence,
+  .demo-step-verification,
+  .activity-feed__entry,
+  .investigation-progress__step,
+  .accountability-chain__stage,
+  .lp-content-reveal,
+    .lp-loading-pulse,
+    .receipt-timeline__step,
+    .receipt__expand-trigger--proof,
+    .cc-trust-cta {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Simplify transitions */
+  .lp-transition-content,
+  .lp-transition-card,
+  .lp-transition-status,
+  .lp-transition-layer,
+  .lp-hover-lift,
+  .lp-press-feedback,
+  .lp-border-glow,
+  .lp-card-depth,
+  .lp-hover-scale,
+  .lp-btn-premium,
+  .surface--accountability {
+    transition: none !important;
+  }
+
+  /* Ensure no movement */
+  .lp-hover-lift:hover,
+  .lp-card-depth:hover,
+  .lp-hover-scale:hover,
+  .lp-btn-premium:hover,
+  .lp-tilt-hover:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .lp-press-feedback:active,
+  .lp-btn-premium:active {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "method": "permutation_importance_mae",
+  "n_features": 41,
+  "top_features": [
+    {
+      "feature": "pm2_5_roll_3h_mean",
+      "importance": 30.903093
+    },
+    {
+      "feature": "pm2_5_roll_24h_mean",
+      "importance": 6.782207
+    },
+    {
+      "feature": "hour_cos",
+      "importance": 5.217081
+    },
+    {
+      "feature": "hour_sin",
+      "importance": 2.179831
+    },
+    {
+      "feature": "pm2_5_roll_3h_std",
+      "importance": 1.705705
+    },
+    {
+      "feature": "wind_gusts_10m",
+      "importance": 0.984121
+    },
+    {
+      "feature": "shortwave_radiation",
+      "importance": 0.960712
+    },
+    {
+      "feature": "pm2_5_lag_2h",
+      "importance": 0.751667
+    },
+    {
+      "feature": "temperature_2m_roll_24h_mean",
+      "importance": 0.632468
+    },
+    {
+      "feature": "pressure_msl_roll_24h_mean",
+      "importance": 0.480824
+    },
+    {
+      "feature": "pm2_5_roll_6h_std",
+      "importance": 0.409106
+    },
+    {
+      "feature": "wind_speed_10m",
+      "importance": 0.31071
+    },
+    {
+      "feature": "dew_point_2m",
+      "importance": 0.306066
+    },
+    {
+      "feature": "pm2_5_roll_24h_std",
+      "importance": 0.305247
+    },
+    {
+      "feature": "temperature_2m",
+      "importance": 0.281676
+    }
+  ],
+  "all_features": [
+    {
+      "feature": "pm2_5_roll_3h_mean",
+      "importance": 30.903093
+    },
+    {
+      "feature": "pm2_5_roll_24h_mean",
+      "importance": 6.782207
+    },
+    {
+      "feature": "hour_cos",
+      "importance": 5.217081
+    },
+    {
+      "feature": "hour_sin",
+      "importance": 2.179831
+    },
+    {
+      "feature": "pm2_5_roll_3h_std",
+      "importance": 1.705705
+    },
+    {
+      "feature": "wind_gusts_10m",
+      "importance": 0.984121
+    },
+    {
+      "feature": "shortwave_radiation",
+      "importance": 0.960712
+    },
+    {
+      "feature": "pm2_5_lag_2h",
+      "importance": 0.751667
+    },
+    {
+      "feature": "temperature_2m_roll_24h_mean",
+      "importance": 0.632468
+    },
+    {
+      "feature": "pressure_msl_roll_24h_mean",
+      "importance": 0.480824
+    },
+    {
+      "feature": "pm2_5_roll_6h_std",
+      "importance": 0.409106
+    },
+    {
+      "feature": "wind_speed_10m",
+      "importance": 0.31071
+    },
+    {
+      "feature": "dew_point_2m",
+      "importance": 0.306066
+    },
+    {
+      "feature": "pm2_5_roll_24h_std",
+      "importance": 0.305247
+    },
+    {
+      "feature": "temperature_2m",
+      "importance": 0.281676
+    },
+    {
+      "feature": "pm2_5_lag_12h",
+      "importance": 0.273043
+    },
+    {
+      "feature": "pm2_5_lag_24h",
+      "importance": 0.268284
+    },
+    {
+      "feature": "pm2_5_lag_3h",
+      "importance": 0.245858
+    },
+    {
+      "feature": "month_sin",
+      "importance": 0.242094
+    },
+    {
+      "feature": "pm2_5_lag_6h",
+      "importance": 0.199365
+    },
+    {
+      "feature": "pressure_msl_roll_12h_mean",
+      "importance": 0.194753
+    },
+    {
+      "feature": "pm2_5_lag_48h",
+      "importance": 0.191699
+    },
+    {
+      "feature": "pm2_5_lag_1h",
+      "importance": 0.187199
+    },
+    {
+      "feature": "cloud_cover",
+      "importance": 0.184761
+    },
+    {
+      "feature": "pm2_5_roll_12h_std",
+      "importance": 0.183994
+    },
+    {
+      "feature": "pm2_5_roll_12h_mean",
+      "importance": 0.176162
+    },
+    {
+      "feature": "apparent_temperature",
+      "importance": 0.154311
+    },
+    {
+      "feature": "temperature_2m_roll_12h_mean",
+      "importance": 0.154158
+    },
+    {
+      "feature": "relative_humidity_2m",
+      "importance": 0.119141
+    },
+    {
+      "feature": "pressure_msl_roll_6h_mean",
+      "importance": 0.116895
+    },
+    {
+      "feature": "pm2_5_roll_6h_mean",
+      "importance": 0.084799
+    },
+    {
+      "feature": "soil_temperature_0_to_7cm",
+      "importance": 0.072943
+    },
+    {
+      "feature": "pm2_5_lag_72h",
+      "importance": 0.070575
+    },
+    {
+      "feature": "surface_pressure",
+      "importance": 0.057577
+    },
+    {
+      "feature": "precipitation",
+      "importance": 0.037207
+    },
+    {
+      "feature": "dow_cos",
+      "importance": 0.035783
+    },
+    {
+      "feature": "temperature_2m_roll_6h_mean",
+      "importance": 0.029635
+    },
+    {
+      "feature": "month_cos",
+      "importance": 0.029632
+    },
+    {
+      "feature": "pressure_msl",
+      "importance": 0.02192
+    },
+    {
+      "feature": "dow_sin",
+      "importance": 0.012792
+    },
+    {
+      "feature": "rain",
+      "importance": 0.006013
+    }
+  ],
+  "importance_sum": 55.561107
+}

@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f8d56a" stop-opacity="0.3"/>
+      <stop offset="60%" stop-color="#e8a94e" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1a2e1a"/>
+    </linearGradient>
+    <linearGradient id="mosque" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+  </defs>
+  <!-- Sky -->
+  <rect width="800" height="500" fill="url(#sky)"/>
+  <!-- Ground -->
+  <rect y="380" width="800" height="120" fill="#1a2e1a" opacity="0.6"/>
+  <!-- Main dome -->
+  <ellipse cx="400" cy="250" rx="120" ry="90" fill="url(#mosque)" opacity="0.8"/>
+  <ellipse cx="400" cy="240" rx="110" ry="80" fill="#c49464" opacity="0.6"/>
+  <!-- Dome finial -->
+  <line x1="400" y1="160" x2="400" y2="130" stroke="#d4a574" stroke-width="3" opacity="0.7"/>
+  <circle cx="400" cy="125" r="8" fill="#d4a574" opacity="0.6"/>
+  <!-- Left minaret -->
+  <rect x="230" y="180" width="24" height="200" fill="url(#mosque)" opacity="0.7" rx="2"/>
+  <ellipse cx="242" cy="175" rx="18" ry="25" fill="#c49464" opacity="0.6"/>
+  <line x1="242" y1="150" x2="242" y2="135" stroke="#d4a574" stroke-width="2" opacity="0.6"/>
+  <!-- Right minaret -->
+  <rect x="546" y="180" width="24" height="200" fill="url(#mosque)" opacity="0.7" rx="2"/>
+  <ellipse cx="558" cy="175" rx="18" ry="25" fill="#c49464" opacity="0.6"/>
+  <line x1="558" y1="150" x2="558" y2="135" stroke="#d4a574" stroke-width="2" opacity="0.6"/>
+  <!-- Small domes -->
+  <ellipse cx="310" cy="290" rx="40" ry="30" fill="#c49464" opacity="0.5"/>
+  <ellipse cx="490" cy="290" rx="40" ry="30" fill="#c49464" opacity="0.5"/>
+  <!-- Arches -->
+  <path d="M340 380 Q340 340 370 340 Q400 340 400 380" fill="none" stroke="#d4a574" stroke-width="2" opacity="0.5"/>
+  <path d="M400 380 Q400 340 430 340 Q460 340 460 380" fill="none" stroke="#d4a574" stroke-width="2" opacity="0.5"/>
+  <!-- Courtyard lines -->
+  <line x1="200" y1="380" x2="600" y2="380" stroke="#d4a574" stroke-width="1" opacity="0.3"/>
+  <line x1="250" y1="385" x2="550" y2="385" stroke="#d4a574" stroke-width="0.5" opacity="0.2"/>
+  <!-- Sun glow -->
+  <circle cx="650" cy="100" r="60" fill="#f8d56a" opacity="0.12"/>
+  <circle cx="650" cy="100" r="35" fill="#f8d56a" opacity="0.2"/>
+</svg>

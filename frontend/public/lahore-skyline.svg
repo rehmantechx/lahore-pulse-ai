@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" preserveAspectRatio="xMaxYMax slice">
+  <defs>
+    <radialGradient id="sunGlow" cx="0.85" cy="0.15" r="0.3">
+      <stop offset="0%" stop-color="#fde68a" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#fef3c7" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#fef3c7" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="bldgBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6dc9a8" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#5ab896" stop-opacity="0.25"/>
+    </linearGradient>
+    <linearGradient id="treeFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7ad4b5" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#5cb898" stop-opacity="0.3"/>
+    </linearGradient>
+    <linearGradient id="domeFill" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#5ab896" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#4aa888" stop-opacity="0.28"/>
+    </linearGradient>
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7ad4b5" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#5cb898" stop-opacity="0.06"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sun + glow -->
+  <circle cx="1020" cy="50" r="35" fill="#fde68a" fill-opacity="0.35"/>
+  <circle cx="1020" cy="50" r="55" fill="#fde68a" fill-opacity="0.12"/>
+  <rect x="0" y="0" width="1200" height="340" fill="url(#sunGlow)"/>
+
+  <!-- === Birds === -->
+  <g fill="none" stroke="#5ab898" stroke-opacity="0.35" stroke-width="1.3" stroke-linecap="round">
+    <path d="M480 52 Q484 46 488 52"/><path d="M490 50 Q494 44 498 50"/>
+    <path d="M620 38 Q624 32 628 38"/><path d="M630 36 Q634 30 638 36"/>
+    <path d="M720 60 Q723 55 726 60"/><path d="M728 58 Q731 53 734 58"/>
+    <path d="M560 70 Q563 65 566 70"/><path d="M568 68 Q571 63 574 68"/>
+    <path d="M830 44 Q833 39 836 44"/><path d="M838 42 Q841 37 844 42"/>
+    <path d="M380 66 Q383 61 386 66"/><path d="M388 64 Q391 59 394 64"/>
+    <path d="M950 55 Q953 50 956 55"/><path d="M958 53 Q961 48 964 53"/>
+    <path d="M300 75 Q303 70 306 75"/><path d="M308 73 Q311 68 314 73"/>
+  </g>
+
+  <!-- === Far background buildings (left cluster) === -->
+  <g fill="url(#bldgBase)">
+    <rect x="15" y="215" width="16" height="55" rx="1" fill-opacity="0.2"/>
+    <rect x="38" y="200" width="20" height="70" rx="1" fill-opacity="0.18"/>
+    <rect x="65" y="210" width="14" height="60" rx="1" fill-opacity="0.16"/>
+    <rect x="85" y="195" width="18" height="75" rx="1" fill-opacity="0.15"/>
+    <rect x="110" y="205" width="16" height="65" rx="1" fill-opacity="0.14"/>
+    <rect x="130" y="218" width="14" height="52" rx="1" fill-opacity="0.12"/>
+  </g>
+
+  <!-- === Minar-e-Pakistan (tall tower, left side) === -->
+  <g>
+    <rect x="158" y="100" width="14" height="170" rx="1" fill="url(#bldgBase)" fill-opacity="0.38"/>
+    <ellipse cx="165" cy="100" rx="12" ry="14" fill="url(#domeFill)" fill-opacity="0.4"/>
+    <line x1="165" y1="86" x2="165" y2="78" stroke="#5ab898" stroke-opacity="0.35" stroke-width="2"/>
+    <circle cx="165" cy="76" r="3" fill="#5ab898" fill-opacity="0.3"/>
+    <rect x="138" y="260" width="54" height="10" rx="2" fill-opacity="0.22"/>
+    <rect x="156" y="145" width="18" height="3" rx="1" fill-opacity="0.25"/>
+    <rect x="157" y="170" width="16" height="3" rx="1" fill-opacity="0.2"/>
+    <rect x="157" y="195" width="16" height="3" rx="1" fill-opacity="0.18"/>
+    <rect x="157" y="220" width="16" height="3" rx="1" fill-opacity="0.15"/>
+    <rect x="152" y="130" width="26" height="4" rx="1" fill-opacity="0.2"/>
+  </g>
+
+  <!-- Buildings near tower -->
+  <g fill="url(#bldgBase)">
+    <rect x="200" y="205" width="22" height="65" rx="1" fill-opacity="0.18"/>
+    <rect x="228" y="218" width="16" height="52" rx="1" fill-opacity="0.15"/>
+    <rect x="250" y="212" width="18" height="58" rx="1" fill-opacity="0.16"/>
+    <rect x="275" y="222" width="14" height="48" rx="1" fill-opacity="0.13"/>
+  </g>
+
+  <!-- === Center-left: Mosque with dome (Badshahi-inspired) === -->
+  <g>
+    <rect x="310" y="195" width="120" height="75" rx="2" fill="url(#bldgBase)" fill-opacity="0.3"/>
+    <ellipse cx="370" cy="195" rx="42" ry="38" fill="url(#domeFill)" fill-opacity="0.38"/>
+    <line x1="370" y1="157" x2="370" y2="145" stroke="#5ab898" stroke-opacity="0.35" stroke-width="2.5"/>
+    <circle cx="370" cy="143" r="3.5" fill="#5ab898" fill-opacity="0.3"/>
+    <rect x="300" y="155" width="10" height="115" rx="1" fill="url(#bldgBase)" fill-opacity="0.35"/>
+    <ellipse cx="305" cy="155" rx="8" ry="9" fill="url(#domeFill)" fill-opacity="0.32"/>
+    <line x1="305" y1="146" x2="305" y2="140" stroke="#5ab898" stroke-opacity="0.28" stroke-width="1.5"/>
+    <rect x="430" y="155" width="10" height="115" rx="1" fill="url(#bldgBase)" fill-opacity="0.35"/>
+    <ellipse cx="435" cy="155" rx="8" ry="9" fill="url(#domeFill)" fill-opacity="0.32"/>
+    <line x1="435" y1="146" x2="435" y2="140" stroke="#5ab898" stroke-opacity="0.28" stroke-width="1.5"/>
+    <path d="M355 270 Q355 245 370 245 Q385 245 385 270" fill="none" stroke="#5ab898" stroke-opacity="0.22" stroke-width="2.5"/>
+    <path d="M325 270 Q325 255 335 255 Q345 255 345 270" fill="none" stroke="#5ab898" stroke-opacity="0.15" stroke-width="1.5"/>
+    <path d="M395 270 Q395 255 405 255 Q415 255 415 270" fill="none" stroke="#5ab898" stroke-opacity="0.15" stroke-width="1.5"/>
+  </g>
+
+  <!-- === Trees cluster (center-left) === -->
+  <g>
+    <ellipse cx="460" cy="242" rx="30" ry="28" fill="url(#treeFill)" fill-opacity="0.38"/>
+    <ellipse cx="488" cy="248" rx="24" ry="22" fill="url(#treeFill)" fill-opacity="0.32"/>
+    <ellipse cx="438" cy="250" rx="22" ry="20" fill="url(#treeFill)" fill-opacity="0.28"/>
+    <ellipse cx="475" cy="255" rx="18" ry="16" fill="url(#treeFill)" fill-opacity="0.22"/>
+    <rect x="458" y="260" width="4" height="10" fill="#5ab898" fill-opacity="0.18"/>
+    <rect x="486" y="262" width="4" height="8" fill="#5ab898" fill-opacity="0.15"/>
+  </g>
+
+  <!-- === Center-right: Faisal Mosque inspired (triangular modern) === -->
+  <g>
+    <polygon points="600,270 660,135 720,270" fill="url(#bldgBase)" fill-opacity="0.32"/>
+    <polygon points="568,270 574,165 580,270" fill="url(#bldgBase)" fill-opacity="0.28"/>
+    <polygon points="740,270 746,165 752,270" fill="url(#bldgBase)" fill-opacity="0.28"/>
+    <line x1="660" y1="135" x2="660" y2="118" stroke="#5ab898" stroke-opacity="0.32" stroke-width="3"/>
+    <circle cx="660" cy="116" r="3" fill="#5ab898" fill-opacity="0.28"/>
+    <rect x="558" y="268" width="204" height="6" rx="1" fill-opacity="0.15"/>
+    <line x1="630" y1="270" x2="660" y2="170" stroke="#5ab898" stroke-opacity="0.1" stroke-width="1"/>
+    <line x1="690" y1="270" x2="660" y2="170" stroke="#5ab898" stroke-opacity="0.1" stroke-width="1"/>
+  </g>
+
+  <!-- === Trees cluster (center-right) === -->
+  <g>
+    <ellipse cx="780" cy="245" rx="28" ry="25" fill="url(#treeFill)" fill-opacity="0.35"/>
+    <ellipse cx="808" cy="250" rx="22" ry="20" fill="url(#treeFill)" fill-opacity="0.28"/>
+    <ellipse cx="828" cy="253" rx="20" ry="18" fill="url(#treeFill)" fill-opacity="0.22"/>
+    <ellipse cx="795" cy="258" rx="16" ry="14" fill="url(#treeFill)" fill-opacity="0.18"/>
+  </g>
+
+  <!-- === Far right: Another mosque/madrasa cluster === -->
+  <g>
+    <ellipse cx="880" cy="200" rx="32" ry="28" fill="url(#domeFill)" fill-opacity="0.32"/>
+    <rect x="846" y="200" width="68" height="70" rx="2" fill="url(#bldgBase)" fill-opacity="0.25"/>
+    <rect x="838" y="165" width="8" height="105" rx="1" fill="url(#bldgBase)" fill-opacity="0.3"/>
+    <ellipse cx="842" cy="165" rx="7" ry="8" fill="url(#domeFill)" fill-opacity="0.28"/>
+    <line x1="842" y1="157" x2="842" y2="152" stroke="#5ab898" stroke-opacity="0.22" stroke-width="1.5"/>
+    <rect x="914" y="165" width="8" height="105" rx="1" fill="url(#bldgBase)" fill-opacity="0.3"/>
+    <ellipse cx="918" cy="165" rx="7" ry="8" fill="url(#domeFill)" fill-opacity="0.28"/>
+    <line x1="918" y1="157" x2="918" y2="152" stroke="#5ab898" stroke-opacity="0.22" stroke-width="1.5"/>
+    <line x1="880" y1="172" x2="880" y2="162" stroke="#5ab898" stroke-opacity="0.28" stroke-width="2"/>
+    <circle cx="880" cy="160" r="2.5" fill="#5ab898" fill-opacity="0.25"/>
+    <path d="M868 270 Q868 252 880 252 Q892 252 892 270" fill="none" stroke="#5ab898" stroke-opacity="0.18" stroke-width="2"/>
+  </g>
+
+  <!-- === Far right buildings === -->
+  <g fill="url(#bldgBase)">
+    <rect x="940" y="212" width="20" height="58" rx="1" fill-opacity="0.18"/>
+    <rect x="966" y="198" width="24" height="72" rx="1" fill-opacity="0.16"/>
+    <rect x="996" y="208" width="18" height="62" rx="1" fill-opacity="0.17"/>
+    <rect x="1020" y="218" width="16" height="52" rx="1" fill-opacity="0.14"/>
+    <rect x="1042" y="205" width="22" height="65" rx="1" fill-opacity="0.15"/>
+    <rect x="1070" y="215" width="20" height="55" rx="1" fill-opacity="0.13"/>
+    <rect x="1096" y="222" width="16" height="48" rx="1" fill-opacity="0.12"/>
+    <rect x="1120" y="212" width="22" height="58" rx="1" fill-opacity="0.11"/>
+    <rect x="1148" y="220" width="18" height="50" rx="1" fill-opacity="0.1"/>
+    <rect x="1172" y="225" width="14" height="45" rx="1" fill-opacity="0.09"/>
+  </g>
+
+  <!-- === More trees far right === -->
+  <g>
+    <ellipse cx="1070" cy="250" rx="20" ry="18" fill="url(#treeFill)" fill-opacity="0.22"/>
+    <ellipse cx="1095" cy="254" rx="16" ry="14" fill="url(#treeFill)" fill-opacity="0.18"/>
+    <ellipse cx="1115" cy="256" rx="14" ry="12" fill="url(#treeFill)" fill-opacity="0.14"/>
+  </g>
+
+  <!-- === Ground / horizon line === -->
+  <rect x="0" y="270" width="1200" height="70" fill="url(#groundGrad)"/>
+
+  <!-- === Additional small detail buildings far left === -->
+  <g fill="url(#bldgBase)">
+    <rect x="0" y="228" width="12" height="42" rx="1" fill-opacity="0.1"/>
+    <rect x="118" y="212" width="14" height="58" rx="1" fill-opacity="0.12"/>
+    <rect x="138" y="218" width="12" height="52" rx="1" fill-opacity="0.1"/>
+  </g>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <defs>
+    <linearGradient id="fortsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a574" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#1a2e1a"/>
+    </linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c49464"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#fortsky)"/>
+  <rect y="370" width="800" height="130" fill="#1a2e1a" opacity="0.6"/>
+  <!-- Main fort wall -->
+  <rect x="150" y="220" width="500" height="150" fill="url(#wall)" opacity="0.7" rx="3"/>
+  <!-- Battlements -->
+  <g fill="#c49464" opacity="0.6">
+    <rect x="160" y="205" width="20" height="20" rx="1"/>
+    <rect x="200" y="205" width="20" height="20" rx="1"/>
+    <rect x="240" y="205" width="20" height="20" rx="1"/>
+    <rect x="280" y="205" width="20" height="20" rx="1"/>
+    <rect x="320" y="205" width="20" height="20" rx="1"/>
+    <rect x="360" y="205" width="20" height="20" rx="1"/>
+    <rect x="400" y="205" width="20" height="20" rx="1"/>
+    <rect x="440" y="205" width="20" height="20" rx="1"/>
+    <rect x="480" y="205" width="20" height="20" rx="1"/>
+    <rect x="520" y="205" width="20" height="20" rx="1"/>
+    <rect x="560" y="205" width="20" height="20" rx="1"/>
+    <rect x="600" y="205" width="20" height="20" rx="1"/>
+  </g>
+  <!-- Left tower -->
+  <rect x="120" y="170" width="50" height="200" fill="url(#wall)" opacity="0.8" rx="2"/>
+  <ellipse cx="145" cy="165" rx="30" ry="25" fill="#c49464" opacity="0.6"/>
+  <!-- Right tower -->
+  <rect x="630" y="170" width="50" height="200" fill="url(#wall)" opacity="0.8" rx="2"/>
+  <ellipse cx="655" cy="165" rx="30" ry="25" fill="#c49464" opacity="0.6"/>
+  <!-- Inner palace -->
+  <rect x="280" y="160" width="240" height="80" fill="#c49464" opacity="0.5" rx="2"/>
+  <ellipse cx="400" cy="155" rx="60" ry="40" fill="#d4a574" opacity="0.5"/>
+  <!-- Entrance arch -->
+  <path d="M360 370 Q360 310 400 310 Q440 310 440 370" fill="#1a2e1a" opacity="0.4"/>
+  <!-- Sun -->
+  <circle cx="650" cy="80" r="40" fill="#f8d56a" opacity="0.15"/>
+</svg>

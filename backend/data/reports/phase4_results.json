@@ -1,0 +1,751 @@
+{
+  "phase": 4,
+  "title": "Phase 4 \u2014 Predictive Forecasting Engine",
+  "status": "COMPLETE",
+  "duration_seconds": 170.13,
+  "dataset": {
+    "rows": 35424,
+    "columns": 22,
+    "date_range_start": "2022-08-01 00:00:00+00:00",
+    "date_range_end": "2026-08-15 23:00:00+00:00",
+    "duration_hours": 35423,
+    "parameters": [
+      "apparent_temperature",
+      "carbon_monoxide",
+      "cloud_cover",
+      "dew_point_2m",
+      "nitrogen_dioxide",
+      "ozone",
+      "pm10",
+      "pm2_5",
+      "precipitation",
+      "pressure_msl",
+      "rain",
+      "relative_humidity_2m",
+      "shortwave_radiation",
+      "soil_temperature_0_to_7cm",
+      "sulphur_dioxide",
+      "surface_pressure",
+      "temperature_2m",
+      "wind_gusts_10m",
+      "wind_speed_10m",
+      "wind_direction_10m",
+      "vapour_pressure_deficit",
+      "soil_moisture_0_to_7cm"
+    ],
+    "parameter_count": 22,
+    "missing_by_param": {
+      "apparent_temperature": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "carbon_monoxide": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "cloud_cover": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "dew_point_2m": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "nitrogen_dioxide": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "ozone": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "pm10": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "pm2_5": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "precipitation": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "pressure_msl": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "rain": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "relative_humidity_2m": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "shortwave_radiation": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "soil_temperature_0_to_7cm": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "sulphur_dioxide": {
+        "non_null": 35352,
+        "total": 35424,
+        "coverage": 0.998
+      },
+      "surface_pressure": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "temperature_2m": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "wind_gusts_10m": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "wind_speed_10m": {
+        "non_null": 35424,
+        "total": 35424,
+        "coverage": 1.0
+      },
+      "wind_direction_10m": {
+        "non_null": 0,
+        "total": 35424,
+        "coverage": 0.0
+      },
+      "vapour_pressure_deficit": {
+        "non_null": 0,
+        "total": 35424,
+        "coverage": 0.0
+      },
+      "soil_moisture_0_to_7cm": {
+        "non_null": 0,
+        "total": 35424,
+        "coverage": 0.0
+      }
+    }
+  },
+  "horizons_evaluated": [
+    1,
+    3,
+    6,
+    12,
+    24
+  ],
+  "results": {
+    "1": {
+      "baselines": {
+        "persistence": {
+          "mae": 5.6218,
+          "rmse": 9.3495,
+          "r2": 0.9612,
+          "medae": 3.0,
+          "max_error": 86.7,
+          "n_samples": 5231
+        },
+        "seasonal_lag": {
+          "mae": 31.2951,
+          "rmse": 46.7691,
+          "r2": 0.0282,
+          "medae": 20.3,
+          "max_error": 317.7,
+          "n_samples": 5231
+        }
+      },
+      "models": {
+        "ridge": {
+          "model_name": "ridge_h1",
+          "horizon": 1,
+          "val_mae": 4.4965,
+          "val_rmse": 7.3983,
+          "val_r2": 0.975,
+          "test_mae": 4.2518,
+          "test_rmse": 7.0781,
+          "test_r2": 0.9777,
+          "wf_mae": 4.1946,
+          "wf_stability": 0.1132
+        },
+        "hgb": {
+          "model_name": "hgb_h1",
+          "horizon": 1,
+          "val_mae": 5.1138,
+          "val_rmse": 7.763,
+          "val_r2": 0.9725,
+          "test_mae": 5.2689,
+          "test_rmse": 8.754,
+          "test_r2": 0.966,
+          "wf_mae": 5.4771,
+          "wf_stability": 0.1581
+        }
+      }
+    },
+    "3": {
+      "baselines": {
+        "persistence": {
+          "mae": 14.2868,
+          "rmse": 22.4376,
+          "r2": 0.7762,
+          "medae": 8.5,
+          "max_error": 184.4,
+          "n_samples": 5230
+        },
+        "seasonal_lag": {
+          "mae": 33.1453,
+          "rmse": 49.2068,
+          "r2": -0.0763,
+          "medae": 21.65,
+          "max_error": 329.5,
+          "n_samples": 5230
+        }
+      },
+      "models": {
+        "ridge": {
+          "model_name": "ridge_h3",
+          "horizon": 3,
+          "val_mae": 11.1588,
+          "val_rmse": 16.1226,
+          "val_r2": 0.8814,
+          "test_mae": 11.027,
+          "test_rmse": 16.1612,
+          "test_r2": 0.8839,
+          "wf_mae": 10.6912,
+          "wf_stability": 0.1211
+        },
+        "hgb": {
+          "model_name": "hgb_h3",
+          "horizon": 3,
+          "val_mae": 10.6141,
+          "val_rmse": 14.773,
+          "val_r2": 0.9004,
+          "test_mae": 10.8375,
+          "test_rmse": 16.0486,
+          "test_r2": 0.8855,
+          "wf_mae": 11.0644,
+          "wf_stability": 0.1306
+        }
+      }
+    },
+    "6": {
+      "baselines": {
+        "persistence": {
+          "mae": 22.5753,
+          "rmse": 34.009,
+          "r2": 0.4859,
+          "medae": 14.6,
+          "max_error": 213.3,
+          "n_samples": 5230
+        },
+        "seasonal_lag": {
+          "mae": 36.2499,
+          "rmse": 53.3439,
+          "r2": -0.2649,
+          "medae": 23.9,
+          "max_error": 332.7,
+          "n_samples": 5230
+        }
+      },
+      "models": {
+        "ridge": {
+          "model_name": "ridge_h6",
+          "horizon": 6,
+          "val_mae": 15.2404,
+          "val_rmse": 21.3121,
+          "val_r2": 0.7927,
+          "test_mae": 15.3577,
+          "test_rmse": 21.4891,
+          "test_r2": 0.7947,
+          "wf_mae": 14.9811,
+          "wf_stability": 0.1351
+        },
+        "hgb": {
+          "model_name": "hgb_h6",
+          "horizon": 6,
+          "val_mae": 14.4482,
+          "val_rmse": 19.673,
+          "val_r2": 0.8234,
+          "test_mae": 14.9767,
+          "test_rmse": 21.477,
+          "test_r2": 0.795,
+          "wf_mae": 16.1119,
+          "wf_stability": 0.1498
+        }
+      }
+    },
+    "12": {
+      "baselines": {
+        "persistence": {
+          "mae": 28.9396,
+          "rmse": 40.5622,
+          "r2": 0.2681,
+          "medae": 20.4,
+          "max_error": 227.7,
+          "n_samples": 5229
+        },
+        "seasonal_lag": {
+          "mae": 38.1179,
+          "rmse": 55.1687,
+          "r2": -0.3539,
+          "medae": 25.8,
+          "max_error": 307.3,
+          "n_samples": 5229
+        }
+      },
+      "models": {
+        "ridge": {
+          "model_name": "ridge_h12",
+          "horizon": 12,
+          "val_mae": 17.2671,
+          "val_rmse": 24.027,
+          "val_r2": 0.7368,
+          "test_mae": 18.084,
+          "test_rmse": 25.0555,
+          "test_r2": 0.7207,
+          "wf_mae": 17.1274,
+          "wf_stability": 0.1506
+        },
+        "hgb": {
+          "model_name": "hgb_h12",
+          "horizon": 12,
+          "val_mae": 16.3406,
+          "val_rmse": 22.7115,
+          "val_r2": 0.7649,
+          "test_mae": 17.2031,
+          "test_rmse": 24.7819,
+          "test_r2": 0.7268,
+          "wf_mae": 18.3778,
+          "wf_stability": 0.1536
+        }
+      }
+    },
+    "24": {
+      "baselines": {
+        "persistence": {
+          "mae": 20.9143,
+          "rmse": 30.4634,
+          "r2": 0.5863,
+          "medae": 14.0,
+          "max_error": 180.5,
+          "n_samples": 5227
+        },
+        "seasonal_lag": {
+          "mae": 31.2726,
+          "rmse": 47.2492,
+          "r2": 0.0047,
+          "medae": 19.8,
+          "max_error": 296.1,
+          "n_samples": 5227
+        }
+      },
+      "models": {
+        "ridge": {
+          "model_name": "ridge_h24",
+          "horizon": 24,
+          "val_mae": 17.9661,
+          "val_rmse": 25.5438,
+          "val_r2": 0.7033,
+          "test_mae": 18.6794,
+          "test_rmse": 27.0546,
+          "test_r2": 0.6737,
+          "wf_mae": 18.1555,
+          "wf_stability": 0.1849
+        },
+        "hgb": {
+          "model_name": "hgb_h24",
+          "horizon": 24,
+          "val_mae": 18.4639,
+          "val_rmse": 26.5314,
+          "val_r2": 0.68,
+          "test_mae": 18.8097,
+          "test_rmse": 27.6749,
+          "test_r2": 0.6585,
+          "wf_mae": 19.9822,
+          "wf_stability": 0.1784
+        }
+      }
+    }
+  },
+  "selected_models": {
+    "1": {
+      "model_version": "v1.0.0_h1_ridge",
+      "algorithm": "ridge",
+      "val_mae": 4.4965,
+      "test_mae": 4.2518,
+      "test_r2": 0.9777,
+      "feature_importance": {
+        "method": "absolute_ridge_coefficients",
+        "top_features": [
+          {
+            "feature": "pm2_5_roll_3h_mean",
+            "importance": 196.094705
+          },
+          {
+            "feature": "pm2_5_lag_1h",
+            "importance": 85.871094
+          },
+          {
+            "feature": "pm2_5_lag_2h",
+            "importance": 66.145786
+          },
+          {
+            "feature": "pm2_5_roll_24h_mean",
+            "importance": 12.872382
+          },
+          {
+            "feature": "pressure_msl",
+            "importance": 12.718557
+          },
+          {
+            "feature": "surface_pressure",
+            "importance": 11.662259
+          },
+          {
+            "feature": "temperature_2m_roll_6h_mean",
+            "importance": 10.628381
+          },
+          {
+            "feature": "pressure_msl_roll_12h_mean",
+            "importance": 10.027163
+          },
+          {
+            "feature": "pressure_msl_roll_6h_mean",
+            "importance": 7.013542
+          },
+          {
+            "feature": "temperature_2m",
+            "importance": 6.610409
+          },
+          {
+            "feature": "temperature_2m_roll_12h_mean",
+            "importance": 5.156534
+          },
+          {
+            "feature": "pm2_5_lag_12h",
+            "importance": 4.546079
+          },
+          {
+            "feature": "pm2_5_roll_6h_mean",
+            "importance": 3.891337
+          },
+          {
+            "feature": "pressure_msl_roll_24h_mean",
+            "importance": 3.341965
+          },
+          {
+            "feature": "pm2_5_lag_24h",
+            "importance": 2.537647
+          }
+        ]
+      }
+    },
+    "3": {
+      "model_version": "v1.0.0_h3_hgb",
+      "algorithm": "hgb",
+      "val_mae": 10.6141,
+      "test_mae": 10.8375,
+      "test_r2": 0.8855,
+      "feature_importance": {
+        "method": "permutation_importance_mae",
+        "top_features": [
+          {
+            "feature": "pm2_5_roll_3h_mean",
+            "importance": 30.903093
+          },
+          {
+            "feature": "pm2_5_roll_24h_mean",
+            "importance": 6.782207
+          },
+          {
+            "feature": "hour_cos",
+            "importance": 5.217081
+          },
+          {
+            "feature": "hour_sin",
+            "importance": 2.179831
+          },
+          {
+            "feature": "pm2_5_roll_3h_std",
+            "importance": 1.705705
+          },
+          {
+            "feature": "wind_gusts_10m",
+            "importance": 0.984121
+          },
+          {
+            "feature": "shortwave_radiation",
+            "importance": 0.960712
+          },
+          {
+            "feature": "pm2_5_lag_2h",
+            "importance": 0.751667
+          },
+          {
+            "feature": "temperature_2m_roll_24h_mean",
+            "importance": 0.632468
+          },
+          {
+            "feature": "pressure_msl_roll_24h_mean",
+            "importance": 0.480824
+          },
+          {
+            "feature": "pm2_5_roll_6h_std",
+            "importance": 0.409106
+          },
+          {
+            "feature": "wind_speed_10m",
+            "importance": 0.31071
+          },
+          {
+            "feature": "dew_point_2m",
+            "importance": 0.306066
+          },
+          {
+            "feature": "pm2_5_roll_24h_std",
+            "importance": 0.305247
+          },
+          {
+            "feature": "temperature_2m",
+            "importance": 0.281676
+          }
+        ]
+      }
+    },
+    "6": {
+      "model_version": "v1.0.0_h6_hgb",
+      "algorithm": "hgb",
+      "val_mae": 14.4482,
+      "test_mae": 14.9767,
+      "test_r2": 0.795,
+      "feature_importance": {
+        "method": "permutation_importance_mae",
+        "top_features": [
+          {
+            "feature": "pm2_5_roll_24h_mean",
+            "importance": 19.071387
+          },
+          {
+            "feature": "pm2_5_roll_3h_mean",
+            "importance": 8.320606
+          },
+          {
+            "feature": "hour_cos",
+            "importance": 7.866748
+          },
+          {
+            "feature": "hour_sin",
+            "importance": 3.53092
+          },
+          {
+            "feature": "temperature_2m_roll_24h_mean",
+            "importance": 3.173907
+          },
+          {
+            "feature": "pm2_5_roll_12h_std",
+            "importance": 1.872838
+          },
+          {
+            "feature": "wind_gusts_10m",
+            "importance": 1.432483
+          },
+          {
+            "feature": "pm2_5_lag_24h",
+            "importance": 1.404415
+          },
+          {
+            "feature": "pm2_5_roll_3h_std",
+            "importance": 1.211803
+          },
+          {
+            "feature": "pm2_5_roll_24h_std",
+            "importance": 1.01963
+          },
+          {
+            "feature": "wind_speed_10m",
+            "importance": 1.001102
+          },
+          {
+            "feature": "pressure_msl_roll_24h_mean",
+            "importance": 0.808129
+          },
+          {
+            "feature": "month_sin",
+            "importance": 0.691379
+          },
+          {
+            "feature": "pm2_5_lag_12h",
+            "importance": 0.567528
+          },
+          {
+            "feature": "pressure_msl_roll_12h_mean",
+            "importance": 0.507637
+          }
+        ]
+      }
+    },
+    "12": {
+      "model_version": "v1.0.0_h12_hgb",
+      "algorithm": "hgb",
+      "val_mae": 16.3406,
+      "test_mae": 17.2031,
+      "test_r2": 0.7268,
+      "feature_importance": {
+        "method": "permutation_importance_mae",
+        "top_features": [
+          {
+            "feature": "pm2_5_lag_12h",
+            "importance": 14.061671
+          },
+          {
+            "feature": "temperature_2m_roll_24h_mean",
+            "importance": 4.783347
+          },
+          {
+            "feature": "pm2_5_roll_3h_mean",
+            "importance": 3.317011
+          },
+          {
+            "feature": "pm2_5_roll_24h_mean",
+            "importance": 2.08285
+          },
+          {
+            "feature": "pressure_msl_roll_24h_mean",
+            "importance": 1.923656
+          },
+          {
+            "feature": "pm2_5_roll_24h_std",
+            "importance": 1.763427
+          },
+          {
+            "feature": "pm2_5_roll_12h_mean",
+            "importance": 1.626943
+          },
+          {
+            "feature": "shortwave_radiation",
+            "importance": 1.201
+          },
+          {
+            "feature": "wind_speed_10m",
+            "importance": 1.15421
+          },
+          {
+            "feature": "pressure_msl_roll_12h_mean",
+            "importance": 1.032918
+          },
+          {
+            "feature": "hour_cos",
+            "importance": 0.977436
+          },
+          {
+            "feature": "month_sin",
+            "importance": 0.86724
+          },
+          {
+            "feature": "hour_sin",
+            "importance": 0.865803
+          },
+          {
+            "feature": "pm2_5_lag_24h",
+            "importance": 0.815689
+          },
+          {
+            "feature": "pm2_5_roll_6h_std",
+            "importance": 0.622923
+          }
+        ]
+      }
+    },
+    "24": {
+      "model_version": "v1.0.0_h24_ridge",
+      "algorithm": "ridge",
+      "val_mae": 17.9661,
+      "test_mae": 18.6794,
+      "test_r2": 0.6737,
+      "feature_importance": {
+        "method": "absolute_ridge_coefficients",
+        "top_features": [
+          {
+            "feature": "pressure_msl",
+            "importance": 106.222122
+          },
+          {
+            "feature": "pm2_5_roll_3h_mean",
+            "importance": 90.48403
+          },
+          {
+            "feature": "surface_pressure",
+            "importance": 89.08163
+          },
+          {
+            "feature": "pm2_5_lag_1h",
+            "importance": 34.389473
+          },
+          {
+            "feature": "pm2_5_lag_2h",
+            "importance": 31.266355
+          },
+          {
+            "feature": "pressure_msl_roll_6h_mean",
+            "importance": 24.731145
+          },
+          {
+            "feature": "temperature_2m",
+            "importance": 17.209787
+          },
+          {
+            "feature": "apparent_temperature",
+            "importance": 9.391296
+          },
+          {
+            "feature": "pressure_msl_roll_24h_mean",
+            "importance": 9.352349
+          },
+          {
+            "feature": "dew_point_2m",
+            "importance": 7.122547
+          },
+          {
+            "feature": "shortwave_radiation",
+            "importance": 5.107493
+          },
+          {
+            "feature": "pressure_msl_roll_12h_mean",
+            "importance": 5.011712
+          },
+          {
+            "feature": "relative_humidity_2m",
+            "importance": 4.869741
+          },
+          {
+            "feature": "soil_temperature_0_to_7cm",
+            "importance": 4.647343
+          },
+          {
+            "feature": "month_sin",
+            "importance": 4.512019
+          }
+        ]
+      }
+    }
+  }
+}
