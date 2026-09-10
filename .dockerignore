@@ -1,0 +1,38 @@
+# ── Docker build context exclusions ──────────────────────────────────
+# Keep the build context small and avoid sending large/unnecessary files.
+
+# Git history
+.git/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Node modules (rebuilt inside Docker)
+**/node_modules/
+
+# Vite build cache
+**/.vite/
+
+# Python caches
+**/__pycache__/
+**/*.pyc
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+
+# Large SQLite database (will be created at runtime by ingestion service)
+backend/data/*.db
+
+# Reports and docs (not needed in production image)
+docs/
+backend/reports/
+backend/data/reports/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
