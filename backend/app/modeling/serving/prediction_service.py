@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -191,7 +191,9 @@ class PredictionService:
         """
         t0 = time.perf_counter()
         now = datetime.now(UTC)
-        target_time = as_of or now
+        # target_time is when the prediction should be verified against reality
+        # For a 6h forecast, that's 6 hours from now
+        target_time = (as_of or now) + timedelta(hours=horizon)
 
         # Initialise result
         result = PredictionResult(
@@ -222,9 +224,10 @@ class PredictionService:
         result.algorithm = cached_model.metadata.algorithm
 
         # 3. Assemble features
+        # Feature assembly uses the prediction time (now) to look up observations
         assembly = assemble_prediction_features(
             db_path=self.db_path,
-            as_of=target_time,
+            as_of=now,
             target_horizon=horizon,
             model_feature_names=cached_model.metadata.feature_names,
         )
@@ -324,7 +327,8 @@ class PredictionService:
         """
         t0 = time.perf_counter()
         now = datetime.now(UTC)
-        target_time = as_of or now
+        # as_of is the reference time for feature assembly (which observations to use)
+        as_of_time = as_of or now
 
         # 1. Determine available horizons
         available_horizons = [
@@ -356,7 +360,7 @@ class PredictionService:
         t_features = time.perf_counter()
         assembly_results = assemble_shared_features(
             db_path=self.db_path,
-            as_of=target_time,
+            as_of=as_of_time,
             horizons=available_horizons,
             model_feature_names_map=model_feature_names_map,
         )
@@ -376,9 +380,11 @@ class PredictionService:
                 continue
 
             assembly = assembly_results[horizon]
+            # Each horizon has a different target time
+            horizon_target_time = now + timedelta(hours=horizon)
             result = PredictionResult(
                 prediction_time=now.isoformat(),
-                target_time=target_time.isoformat(),
+                target_time=horizon_target_time.isoformat(),
                 forecast_horizon=horizon,
             )
 
@@ -438,7 +444,7 @@ class PredictionService:
                         algorithm=result.algorithm,
                         forecast_horizon=horizon,
                         prediction_time=now,
-                        target_time=target_time,
+                        target_time=horizon_target_time,
                         predicted_value=predicted_value,
                         data_timestamp=(
                             assembly.data_timestamp

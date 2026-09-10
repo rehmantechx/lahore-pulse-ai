@@ -40,7 +40,7 @@ DB_PATH = Path(__file__).resolve().parent.parent / "data" / "lahore_pulse.db"
 @pytest.fixture
 def app():
     """Create a FastAPI test app with real database."""
-    from app.api.auth import TokenPayload, require_officer
+    from app.api.auth import TokenPayload, require_admin, require_officer
 
     settings = Settings(
         database_url=f"sqlite:///{DB_PATH}",
@@ -53,7 +53,11 @@ def app():
     def _mock_require_officer():
         return TokenPayload(sub="test-officer", role="officer", exp=9999999999.0)
 
+    def _mock_require_admin():
+        return TokenPayload(sub="test-admin", role="admin", exp=9999999999.0)
+
     application.dependency_overrides[require_officer] = _mock_require_officer
+    application.dependency_overrides[require_admin] = _mock_require_admin
     return application
 
 

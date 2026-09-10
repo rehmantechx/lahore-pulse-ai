@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from loguru import logger
 
 from ..core.errors import ApplicationError, ErrorCode
 
@@ -47,6 +48,14 @@ def register_error_handlers(app: FastAPI) -> None:
         request: Request,
         exc: Exception,
     ) -> JSONResponse:
+        # Log the error for server-side debugging (never expose to client)
+        logger.error(
+            "Unhandled exception",
+            path=str(request.url.path),
+            method=request.method,
+            error_type=type(exc).__name__,
+        )
+
         # Never expose internal details in error responses
         return JSONResponse(
             status_code=500,

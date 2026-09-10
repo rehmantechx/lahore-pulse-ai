@@ -23,6 +23,7 @@ from .reports import router as reports_router
 from .replay import router as replay_router
 from .stations import router as stations_router
 from .verification import router as verification_router
+from .weather import router as weather_router
 
 api_v1_router = APIRouter()
 
@@ -62,3 +63,6 @@ api_v1_router.include_router(investigation_router)
 
 # Investigation Verification (Phase 5 — Learning Loop)
 api_v1_router.include_router(verification_router)
+
+# Weather (current conditions from observations)
+api_v1_router.include_router(weather_router)

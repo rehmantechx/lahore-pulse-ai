@@ -72,60 +72,59 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from localStorage on mount
-  // In demo mode, auto-create a demo officer session if no saved session exists
+  // Restore session from localStorage on mount and validate with backend
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('lahore_plus_auth');
-      const isDemoMode = new URLSearchParams(window.location.search).get('demo') === 'true';
+    let cancelled = false;
 
-      if (saved) {
+    async function restoreSession() {
+      try {
+        const saved = localStorage.getItem('lahore_plus_auth');
+        if (!saved) return;
+
         const parsed = JSON.parse(saved);
-        // Check if token is still valid (not expired)
-        // Support both camelCase (expiresAt) and snake_case (expires_at) for migration
         const expiresAt = parsed.expiresAt || parsed.expires_at;
-        if (expiresAt && new Date(expiresAt) > new Date()) {
-          setUser(parsed);
-          setToken(parsed.token);
-        } else if (isDemoMode) {
-          // In demo mode, token expired — create a local demo session
-          // (backend may be unreachable, but demo must still work)
-          const demoUser = {
-            username: 'officer',
-            role: 'officer',
-            displayName: 'Demo Officer',
-            token: 'demo-local-session',
-            expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-          };
-          setUser(demoUser);
-          setToken(demoUser.token);
-          localStorage.setItem('lahore_plus_auth', JSON.stringify(demoUser));
-        } else {
+
+        // Quick local expiry check first
+        if (!expiresAt || new Date(expiresAt) <= new Date()) {
           localStorage.removeItem('lahore_plus_auth');
+          return;
         }
-      } else if (isDemoMode) {
-        // No saved session, but in demo mode — create local demo session
-        const demoUser = {
-          username: 'officer',
-          role: 'officer',
-          displayName: 'Demo Officer',
-          token: 'demo-local-session',
-          expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-        };
-        setUser(demoUser);
-        setToken(demoUser.token);
-        localStorage.setItem('lahore_plus_auth', JSON.stringify(demoUser));
+
+        // Validate token with backend /auth/me
+        const res = await fetch(`${API_BASE}/auth/me`, {
+          headers: { Authorization: `Bearer ${parsed.token}` },
+        });
+
+        if (!res.ok) {
+          // Token invalid or expired server-side — clear session
+          localStorage.removeItem('lahore_plus_auth');
+          return;
+        }
+
+        const me = await res.json();
+        if (!cancelled) {
+          setUser({
+            username: me.username,
+            role: me.role,
+            displayName: me.username,
+            token: parsed.token,
+            expiresAt: me.expires_at,
+          });
+          setToken(parsed.token);
+        }
+      } catch {
+        // Network error on restore — clear stale session
+        localStorage.removeItem('lahore_plus_auth');
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-    } catch {
-      localStorage.removeItem('lahore_plus_auth');
-    } finally {
-      setLoading(false);
     }
+
+    restoreSession();
+    return () => { cancelled = true; };
   }, []);
 
   const login = useCallback(async (username, password) => {
-    const isDemoMode = new URLSearchParams(window.location.search).get('demo') === 'true';
-
     let res;
     try {
       res = await fetch(`${API_BASE}/auth/login`, {
@@ -133,29 +132,7 @@ export function AuthProvider({ children }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
-    } catch (fetchErr) {
-      // Network failure — if in demo mode, create a local demo session
-      // so the judge can still navigate the command center
-      if (isDemoMode) {
-        const roleMap = { citizen: 'citizen', officer: 'officer', admin: 'admin' };
-        const displayMap = {
-          citizen: 'Demo Citizen',
-          officer: 'Demo Officer',
-          admin: 'Demo Admin',
-        };
-        const role = roleMap[username] || 'officer';
-        const userData = {
-          username,
-          role,
-          displayName: displayMap[username] || 'Demo User',
-          token: 'demo-local-session',
-          expiresAt: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-        };
-        setUser(userData);
-        setToken(userData.token);
-        localStorage.setItem('lahore_plus_auth', JSON.stringify(userData));
-        return userData;
-      }
+    } catch {
       throw new Error('Cannot reach server. Please check your connection.');
     }
 

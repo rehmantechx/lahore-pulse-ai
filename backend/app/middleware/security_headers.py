@@ -38,15 +38,25 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Control referrer information leakage
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
 
-        # Basic Content Security Policy
-        # Allows inline scripts/styles (required by Vite dev), restricts sources
+        # Build CSP connect-src dynamically based on environment
+        host = request.headers.get("host", "localhost")
+        is_local = "localhost" in host or "127.0.0.1" in host
+
+        if is_local:
+            # Dev: allow local dev server connections
+            connect_sources = "'self' http://localhost:8000 http://localhost:8001 http://localhost:5173 ws://localhost:5173"
+        else:
+            # Production: only self origin (no hardcoded ports)
+            connect_sources = "'self'"
+
+        # Content Security Policy
         csp_directives = [
             "default-src 'self'",
             "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
             "style-src 'self' 'unsafe-inline'",
             "img-src 'self' data: https:",
             "font-src 'self' data:",
-            "connect-src 'self' http://localhost:8000 http://localhost:8001 http://localhost:5173",
+            f"connect-src {connect_sources}",
             "frame-ancestors 'none'",
             "base-uri 'self'",
             "form-action 'self'",
@@ -61,8 +71,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
         # HSTS — only in production (enforced HTTPS)
         # In dev, skip to avoid cert issues on localhost
-        host = request.headers.get("host", "")
-        if "localhost" not in host and "127.0.0.1" not in host:
+        if not is_local:
             response.headers["Strict-Transport-Security"] = (
                 "max-age=63072000; includeSubDomains; preload"
             )

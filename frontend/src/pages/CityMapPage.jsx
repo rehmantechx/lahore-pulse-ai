@@ -16,7 +16,7 @@ import {
 import LahoreMap from '../components/map/LahoreMap';
 import { useForecast } from '../hooks/useForecast';
 import { useDemoData } from '../demo';
-import { getStations } from '../services/api';
+import { getStations, getCurrentWeather } from '../services/api';
 import LoadingState from '../components/common/LoadingState';
 
 /* ── AQI Conversion (EPA breakpoint table) ────────────────── */
@@ -71,19 +71,10 @@ const AQI_SCALE = [
   { min: 301, max: 500, label: 'Hazardous', color: '#7f1d1d' },
 ];
 
-/* ── Weather Derivation from PM2.5 ────────────────────────── */
-
-function deriveWeather(pm25) {
-  if (pm25 == null) return { temperature: null, humidity: null, wind: null, pm10: null };
-  const tempBase = 34;
-  const humBase = 56;
-  const windBase = 8;
-  const pm10 = Math.round(pm25 * 1.35);
-  const temp = Math.round(tempBase + (pm25 > 60 ? -2 : 0));
-  const hum = Math.round(humBase + (pm25 > 60 ? 5 : 0));
-  const wind = Math.max(2, Math.round(windBase - (pm25 > 60 ? 2 : 0)));
-  return { temperature: temp, humidity: hum, wind, pm10 };
-}
+/* ── Weather data comes from real backend observations ────── */
+/* Weather values are fetched from /api/v1/weather/current    */
+/* which returns Open-Meteo data stored in the database.      */
+/* No synthetic/derived weather generation.                   */
 
 /* ── Area Definitions (match real Lahore geography) ────────── */
 
@@ -113,6 +104,7 @@ export default function CityMapPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
   const [severityFilter, setSeverityFilter] = useState(null);
+  const [weather, setWeather] = useState({ temperature: null, humidity: null, wind_speed: null, pm10: null });
 
   useEffect(() => {
     if (isDemo) return;
@@ -128,6 +120,36 @@ export default function CityMapPage() {
     fetchStations();
     return () => { cancelled = true; };
   }, [isDemo]);
+
+  /* Fetch real weather from backend observations */
+  useEffect(() => {
+    if (isDemo) {
+      if (demoData?.weather) setWeather(demoData.weather);
+      return;
+    }
+    let cancelled = false;
+    async function fetchWeather() {
+      try {
+        const data = await getCurrentWeather({ signal: AbortSignal.timeout(10000) });
+        if (!cancelled && data?.weather) {
+          const w = data.weather;
+          // Wind speed is stored in m/s; convert to km/h for display
+          const windMs = w.wind_speed?.value ?? null;
+          const windKmh = windMs != null ? Math.round(windMs * 3.6 * 10) / 10 : null;
+          setWeather({
+            temperature: w.temperature?.value ?? null,
+            humidity: w.humidity?.value ?? null,
+            wind_speed: windKmh,
+            pm10: w.pm10?.value ?? null,
+          });
+        }
+      } catch {
+        /* Weather is non-critical; keep null defaults */
+      }
+    }
+    fetchWeather();
+    return () => { cancelled = true; };
+  }, [isDemo, demoData]);
 
   const currentPM25 = forecasts?.['1']?.predicted_pm25 ?? null;
 
@@ -169,11 +191,7 @@ export default function CityMapPage() {
   const overallLabel = getAQILabel(overallAQI);
   const overallColor = getAQIColor(overallAQI);
 
-  /* Weather data for selected location */
-  const weather = useMemo(() => {
-    if (selectedLocation) return deriveWeather(selectedLocation.pm25);
-    return deriveWeather(currentPM25);
-  }, [selectedLocation, currentPM25]);
+  /* Weather data is fetched from /api/v1/weather/current (real observations) */
 
   /* Selected location info */
   const selected = selectedLocation || areas[0] || {
@@ -575,7 +593,7 @@ export default function CityMapPage() {
             </div>
             <div className="cm-metric">
               <div className="cm-metric-icon"><Wind size={16} /></div>
-              <span className="cm-metric-value">{weather.wind ?? '—'}</span>
+              <span className="cm-metric-value">{weather.wind_speed ?? '—'}</span>
               <span className="cm-metric-label">Wind</span>
               <span className="cm-metric-unit">km/h</span>
             </div>

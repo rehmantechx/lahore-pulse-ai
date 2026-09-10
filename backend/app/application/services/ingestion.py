@@ -164,6 +164,7 @@ class IngestionService:
 
         except ApplicationError as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error(
                 "Historical weather ingestion failed",
                 run_id=run.run_id,
@@ -171,6 +172,7 @@ class IngestionService:
             )
         except Exception as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error(
                 "Historical weather ingestion failed with unexpected error",
                 run_id=run.run_id,
@@ -263,9 +265,11 @@ class IngestionService:
 
         except ApplicationError as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Historical AQ ingestion failed", error=str(e))
         except Exception as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Historical AQ ingestion failed with unexpected error", error=str(e))
 
         return run
@@ -343,9 +347,11 @@ class IngestionService:
 
         except ApplicationError as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Live AQICN ingestion failed", error=str(e))
         except Exception as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Live AQICN ingestion failed with unexpected error", error=str(e))
 
         return run
@@ -436,9 +442,11 @@ class IngestionService:
 
         except ApplicationError as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Current weather ingestion failed", error=str(e))
         except Exception as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Current weather ingestion failed with unexpected error", error=str(e))
 
         return run
@@ -527,9 +535,11 @@ class IngestionService:
 
         except ApplicationError as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Current AQ ingestion failed", error=str(e))
         except Exception as e:
             run.finish(status=IngestionStatus.FAILED, accepted_records=0, rejected_records=0)
+            self._update_run_status(run)
             logger.error("Current AQ ingestion failed with unexpected error", error=str(e))
 
         return run

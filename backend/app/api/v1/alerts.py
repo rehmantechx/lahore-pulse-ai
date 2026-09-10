@@ -13,10 +13,11 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 from pydantic import BaseModel
 
+from ..auth import require_auth, TokenPayload
 from ...infrastructure.database import get_database
 
 router = APIRouter(prefix="/alerts", tags=["alerts"])
@@ -80,7 +81,10 @@ async def get_alert_preferences():
 
 
 @router.put("/preferences")
-async def update_alert_preferences(body: AlertPreferencesBulkUpdate):
+async def update_alert_preferences(
+    body: AlertPreferencesBulkUpdate,
+    _auth: TokenPayload = Depends(require_auth),
+):
     """Update alert preferences (bulk)."""
     db = await get_database()
     now = datetime.now(UTC).isoformat()
@@ -123,6 +127,7 @@ async def create_alert(
     aqi_value: float | None = None,
     level: str = "",
     message: str = "",
+    _auth: TokenPayload = Depends(require_auth),
 ):
     """Create a new alert (internal — called by episode detection)."""
     db = await get_database()

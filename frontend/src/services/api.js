@@ -39,11 +39,36 @@ export class TimeoutError extends Error {
   }
 }
 
+// ── Auth Token Reader ──────────────────────────────────────────
+
+/**
+ * Read the authentication token from localStorage.
+ *
+ * Uses the same key as AuthContext (lahore_plus_auth).
+ * Returns null if no saved session exists or token cannot be read.
+ *
+ * @returns {string|null} Bearer token or null for unauthenticated users
+ */
+function _readAuthToken() {
+  try {
+    const saved = localStorage.getItem('lahore_plus_auth');
+    if (!saved) return null;
+    const parsed = JSON.parse(saved);
+    return parsed.token || null;
+  } catch {
+    return null;
+  }
+}
+
 // ── Core Fetch Wrapper ─────────────────────────────────────────
 
 /**
  * Execute an API request with timeout, error parsing, and
  * response validation.
+ *
+ * Automatically attaches Authorization: Bearer <token> header
+ * when a valid session exists in localStorage. Public endpoints
+ * work regardless of auth state.
  *
  * @param {string} path - API path (e.g., '/forecast/all')
  * @param {object} options - fetch options + timeout
@@ -60,12 +85,17 @@ async function apiFetch(path, options = {}) {
     externalSignal.addEventListener('abort', () => controller.abort());
   }
 
+  // Read auth token from localStorage (same key as AuthContext)
+  const token = _readAuthToken();
+
   try {
     const response = await fetch(`${API_BASE}${path}`, {
       ...fetchOptions,
       signal: controller.signal,
       headers: {
         'Accept': 'application/json',
+        // Inject auth token if user has an active session
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...fetchOptions.headers,
       },
     });
@@ -73,6 +103,11 @@ async function apiFetch(path, options = {}) {
     clearTimeout(timeoutId);
 
     if (!response.ok) {
+      // 401 Unauthorized: clear stale token so ProtectedRoute redirects to login
+      if (response.status === 401) {
+        try { localStorage.removeItem('lahore_plus_auth'); } catch { /* ignore */ }
+      }
+
       let errorBody;
       try {
         errorBody = await response.json();
@@ -215,6 +250,15 @@ export async function refreshCurrentData(params = {}, options) {
     ...options,
     timeout: options?.timeout || 60000,
   });
+}
+
+/**
+ * Get current real weather observations from the database.
+ * Data comes from Open-Meteo ingestion pipeline — no synthetic values.
+ * @returns {Promise<object>} { weather: { temperature, humidity, wind_speed, ... } }
+ */
+export async function getCurrentWeather(options) {
+  return apiFetch('/weather/current', options);
 }
 
 // ── Phase 8: Accuracy & Stations ──────────────────────────────

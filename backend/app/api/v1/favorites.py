@@ -16,10 +16,11 @@ import sqlite3
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from loguru import logger
 from pydantic import BaseModel
 
+from ..auth import require_auth, TokenPayload
 from ...infrastructure.database import get_database
 
 router = APIRouter(prefix="/favorites", tags=["favorites"])
@@ -74,7 +75,7 @@ def _get_latest_pm25_for_station(db, station_id: str) -> float | None:
     """Get latest PM2.5 reading for a station."""
     row = db.fetch_one(
         "SELECT value FROM observations "
-        "WHERE station_id = ? AND parameter = 'pm25' "
+        "WHERE station_id = ? AND parameter IN ('pm2_5', 'pm25') "
         "AND observation_type = 'observation' "
         "ORDER BY observed_at DESC LIMIT 1",
         (station_id,),
@@ -182,7 +183,7 @@ async def list_favorites():
 
 
 @router.post("")
-async def add_favorite(body: FavoriteCreate):
+async def add_favorite(body: FavoriteCreate, _auth: TokenPayload = Depends(require_auth)):
     """Add a new saved location.
 
     If station_id is provided, the location is linked to a monitoring
@@ -261,7 +262,7 @@ async def add_favorite(body: FavoriteCreate):
 
 
 @router.put("/{location_id}")
-async def update_favorite(location_id: str, body: FavoriteUpdate):
+async def update_favorite(location_id: str, body: FavoriteUpdate, _auth: TokenPayload = Depends(require_auth)):
     """Update a saved location's name, label, icon, or sort order."""
     db = await get_database()
 
@@ -324,7 +325,7 @@ async def update_favorite(location_id: str, body: FavoriteUpdate):
 
 
 @router.delete("/{location_id}")
-async def delete_favorite(location_id: str):
+async def delete_favorite(location_id: str, _auth: TokenPayload = Depends(require_auth)):
     """Remove a saved location."""
     db = await get_database()
 

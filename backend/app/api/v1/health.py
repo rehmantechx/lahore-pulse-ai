@@ -11,13 +11,14 @@ when they are not configured yet.
 from __future__ import annotations
 
 import asyncio
-import os
 import threading
 import time
 from datetime import UTC, datetime
 from pathlib import Path
 
 from fastapi import APIRouter
+
+from ...core.config import get_settings
 
 router = APIRouter(tags=["health"])
 
@@ -33,11 +34,30 @@ _READINESS_LOCK = threading.Lock()
 _READINESS_REFRESH_INTERVAL = 30  # seconds
 
 
+def _resolve_db_path() -> Path:
+    """Resolve the database file path from LPA_DATABASE_URL.
+
+    Mirrors the resolution logic in infrastructure/database.py get_database():
+    - Strips the sqlite:/// prefix
+    - Resolves relative paths against the backend/ directory
+    - Passes absolute paths through unchanged
+
+    Returns:
+        Resolved Path to the SQLite database file.
+    """
+    settings = get_settings()
+    raw_path = settings.database_url.replace("sqlite:///", "")
+    db_path = Path(raw_path)
+    if not db_path.is_absolute():
+        # Navigate: app/api/v1 → api → app → backend
+        backend_root = Path(__file__).resolve().parent.parent.parent.parent
+        db_path = backend_root / db_path
+    return db_path
+
+
 def _refresh_readiness_cache() -> dict:
     """Compute a fresh readiness snapshot (blocking)."""
-    this_file = Path(__file__).resolve()
-    backend_dir = this_file.parent.parent.parent.parent
-    db_path = backend_dir / "data" / "lahore_pulse.db"
+    db_path = _resolve_db_path()
 
     model_status = _check_model_store()
     db_health = _check_database(db_path)

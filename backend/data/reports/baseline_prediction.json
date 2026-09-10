@@ -1,8 +1,0 @@
-{
-  "predicted_pm25": 46.15366013199451,
-  "as_of": "2026-08-18T18:25:34.224971+00:00",
-  "horizon": 6,
-  "model_version": "v1.0.0_h6_hgb",
-  "algorithm": "hgb",
-  "regenerated_at": "2026-08-22T20:01:01.665963+00:00"
-}

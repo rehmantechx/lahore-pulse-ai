@@ -1,10 +1,8 @@
 /**
  * Login page for Lahore+ Command Center.
  *
- * Role-based demo login for hackathon:
- * - citizen / citizen123 → Public citizen view
- * - officer / officer123 → Government command center
- * - admin / admin123 → Full system access
+ * Role-based login for hackathon demo.
+ * Credentials are validated server-side via bcrypt.
  *
  * Design matches Lahore+ premium civic-tech brand.
  */
@@ -12,12 +10,6 @@
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext.jsx';
-
-const DEMO_ACCOUNTS = [
-  { username: 'citizen', password: 'citizen123', role: 'Citizen', desc: 'Public access — view air quality data' },
-  { username: 'officer', password: 'officer123', role: 'Officer', desc: 'Command center — monitor and respond' },
-  { username: 'admin', password: 'admin123', role: 'Admin', desc: 'Full access — system administration' },
-];
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -29,8 +21,6 @@ export default function LoginPage() {
   const location = useLocation();
 
   const from = location.state?.from?.pathname || '/government';
-  // Preserve query params (e.g. ?demo=true) through the login redirect
-  const fromSearch = location.state?.from?.search || '';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,26 +31,9 @@ export default function LoginPage() {
       const userData = await login(username, password);
       // Redirect based on role
       if (userData.role === 'citizen') {
-        navigate('/citizen' + fromSearch, { replace: true });
+        navigate('/citizen', { replace: true });
       } else {
-        navigate(from + fromSearch, { replace: true });
-      }
-    } catch (err) {
-      setError(err.message || 'Login failed');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleQuickLogin = async (account) => {
-    setError('');
-    setSubmitting(true);
-    try {
-      const userData = await login(account.username, account.password);
-      if (userData.role === 'citizen') {
-        navigate('/citizen' + fromSearch, { replace: true });
-      } else {
-        navigate(from + fromSearch, { replace: true });
+        navigate(from, { replace: true });
       }
     } catch (err) {
       setError(err.message || 'Login failed');
@@ -234,7 +207,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo Accounts */}
+          {/* Demo hint — role names only, no passwords exposed in source */}
           <div style={{ marginTop: 'var(--sp-6)' }}>
             <p
               style={{
@@ -246,35 +219,24 @@ export default function LoginPage() {
                 letterSpacing: '0.05em',
               }}
             >
-              Demo Accounts
+              Available Roles
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--sp-2)' }}>
-              {DEMO_ACCOUNTS.map((account) => (
-                <button
-                  key={account.username}
-                  type="button"
-                  onClick={() => handleQuickLogin(account)}
-                  disabled={submitting}
+              {[
+                { role: 'Citizen', desc: 'Public access — view air quality data' },
+                { role: 'Officer', desc: 'Command center — monitor and respond' },
+                { role: 'Admin', desc: 'Full access — system administration' },
+              ].map((item) => (
+                <div
+                  key={item.role}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
                     padding: 'var(--sp-3)',
                     background: 'var(--lp-bg-secondary)',
                     border: '1px solid var(--lp-border-subtle)',
                     borderRadius: 'var(--lp-radius-sm)',
-                    cursor: submitting ? 'not-allowed' : 'pointer',
-                    opacity: submitting ? 0.7 : 1,
-                    transition: 'border-color 0.2s, background 0.2s',
                     textAlign: 'left',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--lp-brand-400)';
-                    e.currentTarget.style.background = 'var(--lp-brand-50)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--lp-border-subtle)';
-                    e.currentTarget.style.background = 'var(--lp-bg-secondary)';
                   }}
                 >
                   <div>
@@ -285,7 +247,7 @@ export default function LoginPage() {
                         color: 'var(--lp-text-primary)',
                       }}
                     >
-                      {account.role}
+                      {item.role}
                     </div>
                     <div
                       style={{
@@ -293,13 +255,10 @@ export default function LoginPage() {
                         color: 'var(--lp-text-tertiary)',
                       }}
                     >
-                      {account.desc}
+                      {item.desc}
                     </div>
                   </div>
-                  <span style={{ color: 'var(--lp-text-tertiary)', fontSize: 'var(--text-lg)' }}>
-                    →
-                  </span>
-                </button>
+                </div>
               ))}
             </div>
           </div>

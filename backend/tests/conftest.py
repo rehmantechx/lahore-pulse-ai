@@ -8,7 +8,7 @@ from __future__ import annotations
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.auth import TokenPayload, require_officer
+from app.api.auth import TokenPayload, require_admin, require_auth, require_officer
 from app.core.config import Settings
 from app.main import create_app
 
@@ -33,10 +33,18 @@ def app(test_settings: Settings):
     application = create_app(settings=test_settings)
 
     # Bypass auth for testing — all POST endpoints become callable
+    def _mock_require_auth():
+        return TokenPayload(sub="test-citizen", role="citizen", exp=9999999999.0)
+
     def _mock_require_officer():
         return TokenPayload(sub="test-officer", role="officer", exp=9999999999.0)
 
+    def _mock_require_admin():
+        return TokenPayload(sub="test-admin", role="admin", exp=9999999999.0)
+
+    application.dependency_overrides[require_auth] = _mock_require_auth
     application.dependency_overrides[require_officer] = _mock_require_officer
+    application.dependency_overrides[require_admin] = _mock_require_admin
     return application
 
 

@@ -66,25 +66,29 @@ def _backfill_actuals(db_path: Path) -> int:
     now = datetime.now(UTC).isoformat()
     conn = sqlite3.connect(str(db_path))
     try:
-        # Find predictions that need backfilling
+        # Find predictions that need backfilling.
+        # Use datetime() to safely compare timestamps that may have
+        # different formats (ISO with T+timezone vs space-separated).
         pending = conn.execute(
             """SELECT prediction_id, target_time, predicted_value
                FROM prediction_records
                WHERE actual_value IS NULL
-                 AND target_time < ?
+                 AND datetime(target_time) < datetime(?)
                ORDER BY target_time""",
             (now,),
         ).fetchall()
 
         backfilled = 0
         for pred_id, target_time_str, predicted_value in pending:
-            # Find the closest PM2.5 observation at or after target_time
+            # Find the chronologically closest PM2.5 observation at or
+            # after target_time, using datetime() for safe comparison
+            # across different timestamp formats.
             row = conn.execute(
                 """SELECT value FROM observations
-                   WHERE parameter = 'pm25'
+                   WHERE parameter IN ('pm2_5', 'pm25')
                      AND observation_type = 'observation'
-                     AND observed_at >= ?
-                   ORDER BY observed_at ASC
+                     AND datetime(observed_at) >= datetime(?)
+                   ORDER BY datetime(observed_at) ASC
                    LIMIT 1""",
                 (target_time_str,),
             ).fetchone()

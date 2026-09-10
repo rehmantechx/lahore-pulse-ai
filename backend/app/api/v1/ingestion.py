@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from ..auth import require_officer, TokenPayload
+from ..auth import require_admin, TokenPayload
 from ...application.services.ingestion import IngestionService
 from ...core.config import get_settings
 from ...infrastructure.database import get_database
@@ -28,7 +28,7 @@ async def _get_ingestion_service() -> IngestionService:
 
 @router.post("/runs/weather/historical")
 async def trigger_historical_weather_ingestion(
-    _auth: TokenPayload = Depends(require_officer),
+    _auth: TokenPayload = Depends(require_admin),
     start_date: str = Query(..., description="Start date (YYYY-MM-DD)"),
     end_date: str = Query(..., description="End date (YYYY-MM-DD)"),
     latitude: float = Query(31.5204, description="Latitude"),
@@ -72,7 +72,7 @@ async def trigger_historical_weather_ingestion(
 
 @router.post("/runs/aq/historical")
 async def trigger_historical_aq_ingestion(
-    _auth: TokenPayload = Depends(require_officer),
+    _auth: TokenPayload = Depends(require_admin),
     start_date: str = Query(..., description="Start date (ISO 8601)"),
     end_date: str = Query(..., description="End date (ISO 8601)"),
     parameter: str = Query("pm25", description="AQ parameter"),
@@ -116,7 +116,7 @@ async def trigger_historical_aq_ingestion(
 
 @router.post("/runs/aq/live")
 async def trigger_live_aq_ingestion(
-    _auth: TokenPayload = Depends(require_officer),
+    _auth: TokenPayload = Depends(require_admin),
 ) -> dict:
     """Trigger real-time air quality ingestion from AQICN/WAQI.
 
@@ -195,7 +195,7 @@ async def get_ingestion_run(run_id: str) -> dict:
 
 @router.post("/refresh", summary="Refresh current data")
 async def refresh_current_data(
-    _auth: TokenPayload = Depends(require_officer),
+    _auth: TokenPayload = Depends(require_admin),
     latitude: float = Query(31.5204, description="Latitude"),
     longitude: float = Query(74.3587, description="Longitude"),
     forecast_days: int = Query(3, ge=1, le=5, description="Days of forecast/recent data"),

@@ -130,7 +130,7 @@ async def generate_report(body: ReportGenerateRequest, _auth: TokenPayload = Dep
     # Get latest PM2.5 for current conditions
     try:
         latest_pm = db.fetch_one(
-            "SELECT value FROM observations WHERE parameter = 'pm25' "
+            "SELECT value FROM observations WHERE parameter IN ('pm2_5', 'pm25') "
             "ORDER BY observed_at DESC LIMIT 1"
         )
         metadata["current_pm25"] = latest_pm["value"] if latest_pm else None

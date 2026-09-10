@@ -19,8 +19,12 @@ from __future__ import annotations
 import asyncio
 from contextlib import asynccontextmanager
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from .api.errors import register_error_handlers
 from .middleware.security_headers import SecurityHeadersMiddleware
@@ -204,6 +208,53 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     # Error handlers (must be registered after routes)
     register_error_handlers(app)
+
+    # ── Frontend static file serving + SPA fallback ─────────────
+    # Serve the React production build from frontend/dist/.
+    # Only active if the build output exists (skipped in tests/dev
+    # when frontend has not been built).
+    _frontend_dist = (
+        Path(__file__).resolve().parent.parent.parent / "frontend" / "dist"
+    )
+    if _frontend_dist.is_dir():
+        # Mount hashed asset bundles (JS, CSS) under /assets/
+        _assets_dir = _frontend_dist / "assets"
+        if _assets_dir.is_dir():
+            app.mount(
+                "/assets",
+                StaticFiles(directory=str(_assets_dir)),
+                name="static-assets",
+            )
+
+        # Mount landmark SVGs/images
+        _landmarks_dir = _frontend_dist / "landmarks"
+        if _landmarks_dir.is_dir():
+            app.mount(
+                "/landmarks",
+                StaticFiles(directory=str(_landmarks_dir)),
+                name="static-landmarks",
+            )
+
+        # SPA fallback: serve index.html for all non-API, non-asset paths.
+        # This catch-all route is registered AFTER the /api/v1 router,
+        # but we must still guard against intercepting unknown /api/ paths
+        # so that the API's own 404 behavior is preserved.
+        from fastapi.responses import JSONResponse
+
+        @app.get("/{full_path:path}", include_in_schema=False)
+        async def _serve_spa(full_path: str):
+            # Let API 404s propagate — never serve HTML for /api/ paths
+            if full_path.startswith("api/"):
+                return JSONResponse(
+                    {"detail": "Not Found"}, status_code=404
+                )
+            # If the request matches a real file in dist, serve it directly
+            # (favicon.svg, robots.txt, manifest.json, etc.)
+            file_path = _frontend_dist / full_path
+            if full_path and file_path.is_file():
+                return FileResponse(str(file_path))
+            # Otherwise serve index.html — React Router handles client routing
+            return FileResponse(str(_frontend_dist / "index.html"))
 
     return app
 

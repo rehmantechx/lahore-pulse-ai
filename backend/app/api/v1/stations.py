@@ -76,7 +76,7 @@ async def list_stations(
                        SELECT station_id, value, observed_at,
                               ROW_NUMBER() OVER (PARTITION BY station_id ORDER BY observed_at DESC) as rn
                        FROM observations
-                       WHERE parameter = 'pm25'
+                       WHERE parameter IN ('pm2_5', 'pm25')
                          AND observation_type = 'observation'
                    ) o ON s.station_id = o.station_id AND o.rn = 1
                    WHERE s.source_id = ?
@@ -93,7 +93,7 @@ async def list_stations(
                        SELECT station_id, value, observed_at,
                               ROW_NUMBER() OVER (PARTITION BY station_id ORDER BY observed_at DESC) as rn
                        FROM observations
-                       WHERE parameter = 'pm25'
+                       WHERE parameter IN ('pm2_5', 'pm25')
                          AND observation_type = 'observation'
                    ) o ON s.station_id = o.station_id AND o.rn = 1
                    WHERE s.active = 1
@@ -138,7 +138,7 @@ async def get_station_history(
         rows = conn.execute(
             """SELECT o.station_id, o.source_id, o.value, o.observed_at
                FROM observations o
-               WHERE o.parameter = 'pm25'
+               WHERE o.parameter IN ('pm2_5', 'pm25')
                  AND o.observation_type = 'observation'
                  AND o.observed_at >= datetime('now', ?)
                ORDER BY o.observed_at ASC""",

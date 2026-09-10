@@ -1,6 +1,6 @@
 """Authentication endpoints.
 
-Provides minimal authentication for hackathon demo.
+Provides role-based authentication for hackathon demo.
 Uses HMAC-SHA256 tokens with role-based access control.
 
 Roles:
@@ -8,49 +8,92 @@ Roles:
     - officer: Read + command center access
     - admin: Full access including ingestion control
 
-For hackathon: role-based login with hardcoded demo credentials.
-No real user database — tokens encode role and expiry.
+Security:
+    - Passwords are bcrypt-hashed (never stored in plaintext)
+    - JWT secret is required in production via LPA_AUTH_SECRET
+    - Tokens encode role and expiry, signed with HMAC-SHA256
+    - Login endpoint is rate-limited to prevent brute-force attacks
 """
 
 from __future__ import annotations
 
+import collections
 import hashlib
 import hmac
 import json
 import os
+import secrets
 import time
+import warnings
 from base64 import urlsafe_b64decode, urlsafe_b64encode
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 from fastapi import APIRouter, Depends, HTTPException, Request, status
+from loguru import logger
 from pydantic import BaseModel, Field
+
+from ..core.config import get_settings
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 # ── Token Configuration ──────────────────────────────────────────
-# Secret key for HMAC signing (in production, use env variable)
-_TOKEN_SECRET = os.environ.get(
-    "LPA_AUTH_SECRET",
-    "lahore-plus-hackathon-secret-key-change-in-production",
-)
+# Secret key for HMAC signing — REQUIRED in production
+settings = get_settings()
+
 _TOKEN_EXPIRY_HOURS = 24  # Tokens expire after 24 hours
 
+# Default secret for development only — must never be used in production
+_DEV_SECRET_DEFAULT = "lahore-plus-hackathon-dev-only-not-for-production"
 
-# ── Demo Users ───────────────────────────────────────────────────
-# Hardcoded for hackathon — no database needed
+if settings.is_production:
+    _raw_secret = os.environ.get("LPA_AUTH_SECRET", "")
+    if not _raw_secret:
+        raise RuntimeError(
+            "FATAL: LPA_AUTH_SECRET environment variable must be set in production. "
+            "Generate one with: python -c \"import secrets; print(secrets.token_urlsafe(64))\""
+        )
+    if _raw_secret == _DEV_SECRET_DEFAULT:
+        raise RuntimeError(
+            "FATAL: LPA_AUTH_SECRET is still the development default. "
+            "Set it to a unique random value for production."
+        )
+    if len(_raw_secret) < 32:
+        raise RuntimeError(
+            "FATAL: LPA_AUTH_SECRET must be at least 32 characters for security."
+        )
+    _TOKEN_SECRET = _raw_secret
+    logger.info("Production JWT secret loaded from environment")
+else:
+    _TOKEN_SECRET = os.environ.get("LPA_AUTH_SECRET", _DEV_SECRET_DEFAULT)
+    if _TOKEN_SECRET == _DEV_SECRET_DEFAULT:
+        logger.warning(
+            "Using development LPA_AUTH_SECRET — set a real secret for production!"
+        )
+
+
+# ── Demo Users (bcrypt-hashed passwords) ─────────────────────────
+# Passwords are hashed at module load time with bcrypt.
+# Plaintext values are never stored or logged.
+_DEMO_PASSWORD_HASHES = {
+    "citizen": bcrypt.hashpw(b"citizen123", bcrypt.gensalt()),
+    "officer": bcrypt.hashpw(b"officer123", bcrypt.gensalt()),
+    "admin": bcrypt.hashpw(b"admin123", bcrypt.gensalt()),
+}
+
 DEMO_USERS = {
     "citizen": {
-        "password": "citizen123",
+        "password_hash": _DEMO_PASSWORD_HASHES["citizen"],
         "role": "citizen",
         "display_name": "Public Citizen",
     },
     "officer": {
-        "password": "officer123",
+        "password_hash": _DEMO_PASSWORD_HASHES["officer"],
         "role": "officer",
         "display_name": "Air Quality Officer",
     },
     "admin": {
-        "password": "admin123",
+        "password_hash": _DEMO_PASSWORD_HASHES["admin"],
         "role": "admin",
         "display_name": "System Administrator",
     },
@@ -194,18 +237,51 @@ async def require_admin(token: TokenPayload = Depends(require_auth)) -> TokenPay
     return token
 
 
+# ── Login Rate Limiting ──────────────────────────────────────────
+# In-memory rate limiter for login attempts.
+# Tracks attempts per IP address with a sliding window.
+_LOGIN_RATE_LIMIT = 10  # max attempts per window
+_LOGIN_RATE_WINDOW_SECONDS = 300  # 5-minute window
+_login_attempts: dict[str, list[float]] = collections.defaultdict(list)
+
+
+def _check_login_rate_limit(ip: str) -> None:
+    """Check if an IP has exceeded the login rate limit.
+
+    Raises 429 Too Many Requests if limit exceeded.
+    Cleans up old entries outside the window.
+    """
+    now = time.time()
+    cutoff = now - _LOGIN_RATE_WINDOW_SECONDS
+
+    # Clean old entries
+    _login_attempts[ip] = [
+        t for t in _login_attempts[ip] if t > cutoff
+    ]
+
+    if len(_login_attempts[ip]) >= _LOGIN_RATE_LIMIT:
+        logger.warning("Login rate limit exceeded", ip=ip)
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Please try again later.",
+        )
+
+    _login_attempts[ip].append(now)
+
+
 # ── Endpoints ────────────────────────────────────────────────────
 @router.post("/login", response_model=LoginResponse)
-async def login(body: LoginRequest) -> LoginResponse:
+async def login(body: LoginRequest, request: Request) -> LoginResponse:
     """Authenticate and receive a token.
 
-    Demo users:
-        - citizen / citizen123 (read-only public access)
-        - officer / officer123 (read + command center)
-        - admin / admin123 (full access)
+    Rate-limited to prevent brute-force attacks.
     """
+    # Rate limit by client IP
+    client_ip = request.client.host if request.client else "unknown"
+    _check_login_rate_limit(client_ip)
+
     user = DEMO_USERS.get(body.username)
-    if not user or user["password"] != body.password:
+    if not user or not bcrypt.checkpw(body.password.encode(), user["password_hash"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
@@ -213,6 +289,9 @@ async def login(body: LoginRequest) -> LoginResponse:
 
     token = _create_token(body.username, user["role"])
     expiry = datetime.now(timezone.utc) + timedelta(hours=_TOKEN_EXPIRY_HOURS)
+
+    # Clear rate limit on successful login
+    _login_attempts.pop(client_ip, None)
 
     return LoginResponse(
         token=token,
