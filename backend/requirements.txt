@@ -33,3 +33,6 @@ orjson==3.11.9
 
 # Authentication
 bcrypt>=4.0.0
+
+# PostgreSQL / Layerbase
+psycopg[binary]==3.2.10
