@@ -280,7 +280,6 @@ def get_db_connection(
         conn = psycopg.connect(
             url,
             autocommit=True,
-            options="-c statement_timeout=30000",
         )
         logger.debug("Connected to Layerbase (PostgreSQL wire protocol)")
         return _PsycopgConnection(conn, row_factory=row_factory)
