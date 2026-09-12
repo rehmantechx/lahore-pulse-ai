@@ -224,7 +224,7 @@ def _load_recent_observations(
             return cached.copy()
 
     start_time = as_of - timedelta(hours=lookback_hours)
-    start_iso = start_time.isoformat()
+    start_iso = start_time.strftime("%Y-%m-%d %H:%M:%S")
 
     # Parameters we need for features (19 stored params + 3 missing = 22)
     all_params = (
@@ -246,7 +246,7 @@ def _load_recent_observations(
     conn = _get_read_connection(db_path)
     try:
         # Upper bound: as_of + 1h margin to avoid future forecast data
-        end_iso = (as_of + timedelta(hours=1)).isoformat()
+        end_iso = (as_of + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
         rows = conn.execute(sql, [start_iso, end_iso, *all_params]).fetchall()
     finally:
         conn.close()
