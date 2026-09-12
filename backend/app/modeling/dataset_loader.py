@@ -23,6 +23,7 @@ import pandas as pd
 from loguru import logger
 
 from .config import DatasetConfig
+from ..core.db import get_db_connection, is_cloud_db
 
 # ── Constants ────────────────────────────────────────────────────────
 
@@ -88,13 +89,13 @@ def load_observations_from_db(
         Wide-format DataFrame with DatetimeIndex named 'time' (UTC).
     """
     db_path = Path(db_path)
-    if not db_path.exists():
+    if not is_cloud_db() and not db_path.exists():
         raise FileNotFoundError(f"Database not found: {db_path}")
 
     params_to_load = parameters or ALL_PARAMS
     placeholders = ",".join(["?"] * len(params_to_load))
 
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(read_only=True)
     try:
         sql = f"""
             SELECT observed_at, parameter, value

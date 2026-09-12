@@ -218,28 +218,43 @@ class Database:
     def _get_connection(self) -> sqlite3.Connection:
         """Get or create the database connection.
 
-        Applies read-optimized PRAGMAs on first connection:
+        In cloud mode, uses the unified adapter from app.core.db.
+        In local mode, applies read-optimized PRAGMAs:
         - WAL journal mode (safe for concurrent readers)
         - foreign_keys=ON (referential integrity)
         - cache_size=-64000 (64 MB page cache, default is 2 MB)
         - temp_store=MEMORY (avoids disk spills for ORDER BY / GROUP BY)
         - mmap_size=268435456 (256 MB memory-mapped I/O)
         """
+        from ..core.db import is_cloud_db, get_db_connection
         if self._connection is None:
-            self._connection = sqlite3.connect(
-                str(self.database_path),
-                check_same_thread=False,
-            )
-            self._connection.row_factory = sqlite3.Row
-            self._connection.execute("PRAGMA journal_mode=WAL")
-            self._connection.execute("PRAGMA foreign_keys=ON")
-            self._connection.execute("PRAGMA cache_size=-64000")       # 64 MB
-            self._connection.execute("PRAGMA temp_store=MEMORY")
-            self._connection.execute("PRAGMA mmap_size=268435456")     # 256 MB
+            if is_cloud_db():
+                self._connection = get_db_connection(row_factory=sqlite3.Row)
+            else:
+                self._connection = sqlite3.connect(
+                    str(self.database_path),
+                    check_same_thread=False,
+                )
+                self._connection.row_factory = sqlite3.Row
+                self._connection.execute("PRAGMA journal_mode=WAL")
+                self._connection.execute("PRAGMA foreign_keys=ON")
+                self._connection.execute("PRAGMA cache_size=-64000")       # 64 MB
+                self._connection.execute("PRAGMA temp_store=MEMORY")
+                self._connection.execute("PRAGMA mmap_size=268435456")     # 256 MB
         return self._connection
 
     def initialize(self) -> None:
-        """Create the database directory, apply schema, and update statistics."""
+        """Create the database directory, apply schema, and update statistics.
+
+        In cloud mode, only runs schema creation (no directory creation or ANALYZE).
+        """
+        from ..core.db import is_cloud_db
+        if is_cloud_db():
+            conn = self._get_connection()
+            conn.executescript(SCHEMA_SQL)
+            conn.commit()
+            logger.info("Database initialized (cloud mode)", path=str(self.database_path))
+            return
         self.database_path.parent.mkdir(parents=True, exist_ok=True)
         conn = self._get_connection()
         conn.executescript(SCHEMA_SQL)

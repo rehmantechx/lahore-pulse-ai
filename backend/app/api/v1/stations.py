@@ -18,12 +18,14 @@ Design:
 
 from __future__ import annotations
 
+import sqlite3
 from pathlib import Path
 
 from fastapi import APIRouter, Query
 from loguru import logger
 
 from ...core.config import get_settings
+from ...core.db import get_db_connection, db_exists
 
 router = APIRouter(prefix="/stations", tags=["stations"])
 
@@ -51,13 +53,9 @@ async def list_stations(
 
     Returns station locations, source info, and most recent observation.
     """
-    import sqlite3
-
-    db_path = _get_db_path()
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(read_only=True, row_factory=sqlite3.Row, db_path=_get_db_path())
     try:
-        # Check if stations table exists
+        # Check if stations table exists (adapter returns empty cursor for sqlite_master)
         tables = conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name='stations'"
         ).fetchall()
@@ -129,11 +127,7 @@ async def get_station_history(
 
     Returns time-series data for charting station-level trends.
     """
-    import sqlite3
-
-    db_path = _get_db_path()
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(read_only=True, row_factory=sqlite3.Row, db_path=_get_db_path())
     try:
         rows = conn.execute(
             """SELECT o.station_id, o.source_id, o.value, o.observed_at

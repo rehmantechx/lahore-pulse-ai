@@ -34,6 +34,8 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 from ..dataset_loader import OVERLAP_START, MISSING_PARAMS
 from ..models import (
     TARGET_LAGS,
@@ -69,17 +71,18 @@ _OBS_CACHE_MAX_ENTRIES = 4  # Bounded: hold at most 4 recent windows
 # ── Read-Optimised SQLite Connection ──────────────────────────────
 
 
-def _get_read_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a SQLite connection tuned for read-heavy serving queries.
+def _get_read_connection(db_path: str | Path | None = None) -> sqlite3.Connection:
+    """Open a read-optimized connection (SQLite or PostgreSQL).
 
-    PRAGMA rationale:
+    PRAGMA rationale (SQLite only):
     - cache_size=-64000: 64 MB page cache (default 2 MB is too small)
     - temp_store=MEMORY: avoids disk spills for ORDER BY / GROUP BY
     - mmap_size=268435456: 256 MB memory-mapped I/O for large reads
     - journal_mode=WAL: safe for concurrent readers
     - synchronous=NORMAL: acceptable durability for read-only queries
-      (audit writes use the Database class with FULL synchronous)
     """
+    if is_cloud_db():
+        return get_db_connection(read_only=True)
     conn = sqlite3.connect(str(db_path), timeout=30)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA cache_size=-64000")
@@ -184,7 +187,7 @@ class FeatureAssemblyResult:
 
 
 def _load_recent_observations(
-    db_path: str | Path,
+    db_path: str | Path | None,
     as_of: datetime,
     lookback_hours: int = LOOKBACK_HOURS,
     use_cache: bool = True,
@@ -195,7 +198,7 @@ def _load_recent_observations(
     when multiple horizons share the same observation window.
 
     Args:
-        db_path: Path to SQLite database.
+        db_path: SQLite file path or None (cloud mode uses LAYERBASE_DB_URL).
         as_of: Reference timestamp (prediction time).
         lookback_hours: How many hours of history to load.
         use_cache: Whether to use the observation cache.
@@ -204,13 +207,15 @@ def _load_recent_observations(
         Wide-format DataFrame with DatetimeIndex (UTC) and one column
         per parameter.
     """
-    db_path = Path(db_path)
-    if not db_path.exists():
-        raise FileNotFoundError(f"Database not found: {db_path}")
+    is_cloud = is_cloud_db()
+    if not is_cloud:
+        db_path = Path(db_path)
+        if not db_path.exists():
+            raise FileNotFoundError(f"Database not found: {db_path}")
 
     # Truncate as_of to the hour for cache key stability
     as_of_hour = as_of.replace(minute=0, second=0, microsecond=0, tzinfo=None)
-    cache_key = (str(db_path), as_of_hour.isoformat(), lookback_hours)
+    cache_key = ("cloud" if is_cloud else str(db_path), as_of_hour.isoformat(), lookback_hours)
 
     # Check cache
     if use_cache:

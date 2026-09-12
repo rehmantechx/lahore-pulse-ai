@@ -24,6 +24,8 @@ from typing import Any
 import pandas as pd
 from loguru import logger
 
+from ...core.db import is_cloud_db
+
 from .audit import record_prediction
 from .feature_assembly import (
     FeatureAssemblyResult,
@@ -130,18 +132,18 @@ class PredictionService:
     def __init__(
         self,
         model_store: ModelStore,
-        db_path: str | Path,
+        db_path: str | Path | None,
         auto_load: bool = True,
     ) -> None:
         """Initialise the prediction service.
 
         Args:
             model_store: Pre-configured ModelStore instance.
-            db_path: Path to the SQLite database.
+            db_path: SQLite file path or None (cloud mode uses LAYERBASE_DB_URL).
             auto_load: If True, load all models on construction.
         """
         self.model_store = model_store
-        self.db_path = Path(db_path)
+        self.db_path = db_path  # passed through to get_db_connection()
         self._ready = False
 
         if auto_load:
@@ -484,10 +486,17 @@ class PredictionService:
 
     def status(self) -> dict[str, Any]:
         """Detailed service status."""
+        if is_cloud_db():
+            db_exists = True
+            db_path_str = "(cloud)"
+        else:
+            db_path_obj = Path(self.db_path) if not isinstance(self.db_path, Path) else self.db_path
+            db_exists = db_path_obj.exists() if db_path_obj else False
+            db_path_str = str(db_path_obj)
         return {
             "ready": self.is_ready,
             "model_store": self.model_store.status(),
-            "db_path": str(self.db_path),
-            "db_exists": self.db_path.exists(),
+            "db_path": db_path_str,
+            "db_exists": db_exists,
             "supported_horizons": SUPPORTED_HORIZONS,
         }

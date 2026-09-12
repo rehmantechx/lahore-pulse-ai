@@ -27,6 +27,8 @@ from pathlib import Path
 import sqlite3
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 
 # ── Freshness States ─────────────────────────────────────────────
 
@@ -89,7 +91,9 @@ class FreshnessResult:
 
 
 def _get_read_conn(db_path: Path) -> sqlite3.Connection:
-    """Open a lightweight read-only SQLite connection."""
+    """Open a lightweight read-only connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(read_only=True)
     conn = sqlite3.connect(str(db_path), timeout=10, uri=True)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA cache_size=-16000")
@@ -121,7 +125,7 @@ def assess_freshness(
 
     warnings: list[str] = []
 
-    if not db_path.exists():
+    if not is_cloud_db() and not db_path.exists():
         return FreshnessResult(
             state=FreshnessState.UNAVAILABLE,
             freshness_hours=float("inf"),

@@ -57,7 +57,12 @@ class Settings(BaseSettings):
     # ── Database ─────────────────────────────────────────────────
     database_url: str = Field(
         default="sqlite:///data/lahore_pulse.db",
-        description="SQLite database file path",
+        description="SQLite database file path (local development)",
+    )
+    layerbase_db_url: str | None = Field(
+        default=None,
+        description="Layerbase PostgreSQL connection string (production). "
+        "When set, the backend uses cloud DB instead of local SQLite.",
     )
 
     # ── External Providers ───────────────────────────────────────

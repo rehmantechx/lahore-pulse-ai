@@ -28,6 +28,8 @@ from typing import Any
 
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 
 # ── Constants ──────────────────────────────────────────────────
 
@@ -171,7 +173,9 @@ class SourceCompassResult:
 
 
 def _get_read_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a read-optimized SQLite connection."""
+    """Open a read-optimized connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(read_only=True)
     conn = sqlite3.connect(str(db_path), timeout=10)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA cache_size=-16000")

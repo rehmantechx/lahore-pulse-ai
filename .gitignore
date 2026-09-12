@@ -60,6 +60,13 @@ logs/
 *.db-wal
 *.sqlite3
 
+# Layerbase connection secrets (NEVER commit)
+.layerbase_conn.txt
+
+# Migration helper scripts (contain connection details)
+scripts/*layerbase*.py
+scripts/*layerbase*.ps1
+
 # Root data dir (stale dev artifacts — real data is in backend/data/)
 /data/
 

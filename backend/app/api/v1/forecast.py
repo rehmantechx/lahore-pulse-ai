@@ -21,6 +21,7 @@ Design:
 
 from __future__ import annotations
 
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -28,6 +29,7 @@ from fastapi import APIRouter, HTTPException, Query
 from loguru import logger
 
 from ...core.config import get_settings
+from ...core.db import get_db_connection, db_exists, is_cloud_db
 from ...core.errors import ErrorCode
 from ...modeling.serving.audit import count_predictions, get_recent_predictions
 from ...modeling.serving.model_store import ModelStore
@@ -59,12 +61,15 @@ async def _get_prediction_service() -> PredictionService:
         settings = get_settings()
         backend_dir = _resolve_backend_root()
         models_dir = backend_dir / "data" / "models"
-        db_path = settings.database_url.replace("sqlite:///", "")
 
-        # Resolve db_path relative to backend root if it's not absolute
-        db_path_obj = Path(db_path)
-        if not db_path_obj.is_absolute():
-            db_path_obj = backend_dir / db_path_obj
+        if is_cloud_db():
+            db_path_obj = None  # cloud connection uses LAYERBASE_DB_URL
+        else:
+            db_path = settings.database_url.replace("sqlite:///", "")
+            # Resolve db_path relative to backend root if it's not absolute
+            db_path_obj = Path(db_path)
+            if not db_path_obj.is_absolute():
+                db_path_obj = backend_dir / db_path_obj
 
         store = ModelStore(models_dir)
         _prediction_service = PredictionService(
@@ -237,8 +242,7 @@ async def forecast_status() -> dict:
         base_status["freshness"] = freshness.to_dict()
 
         # Add data-quality summary: observation vs forecast counts
-        import sqlite3 as _sql
-        conn = _sql.connect(str(db_path_obj), timeout=10)
+        conn = get_db_connection(read_only=True)
         try:
             rows = conn.execute(
                 "SELECT observation_type, COUNT(*) FROM observations "

@@ -30,6 +30,7 @@ from ..auth import require_officer, TokenPayload
 from loguru import logger
 
 from ...core.config import get_settings
+from ...core.db import get_db_connection, db_exists
 
 router = APIRouter(prefix="/accuracy", tags=["accuracy"])
 
@@ -64,7 +65,7 @@ def _backfill_actuals(db_path: Path) -> int:
         Number of records backfilled.
     """
     now = datetime.now(UTC).isoformat()
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=db_path)
     try:
         # Find predictions that need backfilling.
         # Use datetime() to safely compare timestamps that may have
@@ -122,10 +123,9 @@ async def get_accuracy_summary(
     Auto-backfills actuals before computing stats.
     Returns MAE, max error, verified count per horizon.
     """
-    db_path = _get_db_path()
-    _backfill_actuals(db_path)
+    _backfill_actuals(_get_db_path())
 
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=_get_db_path())
     try:
         total = conn.execute(
             "SELECT COUNT(*) FROM prediction_records"
@@ -173,11 +173,9 @@ async def get_recent_verified(
 
     Returns predicted vs actual values, error, and timing info.
     """
-    db_path = _get_db_path()
-    _backfill_actuals(db_path)
+    _backfill_actuals(_get_db_path())
 
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(row_factory=sqlite3.Row, db_path=_get_db_path())
     try:
         if horizon is not None:
             rows = conn.execute(
@@ -241,8 +239,7 @@ def _run_accountability_query(
     # Validate order direction to prevent injection
     safe_order = "DESC" if order.upper() == "DESC" else "ASC"
 
-    conn = sqlite3.connect(db_path_str)
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(row_factory=sqlite3.Row, db_path=db_path)
     try:
         if horizon is not None:
             rows = conn.execute(
@@ -320,8 +317,7 @@ async def prediction_accountability(
     This is the core differentiator: predictions are tracked, verified,
     and their accuracy is transparently reported.
     """
-    db_str = str(DB_PATH)
-    conn = sqlite3.connect(db_str)
+    conn = get_db_connection(db_path=DB_PATH)
     total = conn.execute("SELECT COUNT(*) FROM prediction_records").fetchone()[0]
     pending = conn.execute(
         "SELECT COUNT(*) FROM prediction_records WHERE target_time > datetime('now')"
@@ -377,8 +373,7 @@ async def horizon_comparison(
     """
     _backfill_actuals(Path(str(DB_PATH)))
 
-    conn = sqlite3.connect(str(DB_PATH))
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(row_factory=sqlite3.Row, db_path=DB_PATH)
     try:
         # Live accuracy per horizon
         rows = conn.execute(

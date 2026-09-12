@@ -22,6 +22,7 @@ from fastapi import APIRouter, HTTPException, Query
 from loguru import logger
 
 from ...core.config import get_settings
+from ...core.db import is_cloud_db
 from ...core.errors import ErrorCode
 from ...modeling.serving.episode import EpisodeState, compute_episode_intelligence
 from ...modeling.serving.freshness import FreshnessState, assess_freshness
@@ -51,11 +52,14 @@ async def _get_prediction_service() -> PredictionService:
         settings = get_settings()
         backend_dir = _resolve_backend_root()
         models_dir = backend_dir / "data" / "models"
-        db_path = settings.database_url.replace("sqlite:///", "")
 
-        db_path_obj = Path(db_path)
-        if not db_path_obj.is_absolute():
-            db_path_obj = backend_dir / db_path_obj
+        if is_cloud_db():
+            db_path_obj = None  # cloud connection uses LAYERBASE_DB_URL
+        else:
+            db_path = settings.database_url.replace("sqlite:///", "")
+            db_path_obj = Path(db_path)
+            if not db_path_obj.is_absolute():
+                db_path_obj = backend_dir / db_path_obj
 
         store = ModelStore(models_dir)
         _prediction_service = PredictionService(

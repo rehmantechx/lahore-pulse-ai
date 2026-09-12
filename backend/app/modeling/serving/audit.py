@@ -26,6 +26,8 @@ from typing import Any
 
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 # ── Schema Extension ──────────────────────────────────────────────
 
 PREDICTION_SCHEMA_SQL = """
@@ -60,8 +62,7 @@ def ensure_prediction_schema(db_path: str | Path) -> None:
 
     Idempotent — safe to call multiple times.
     """
-    db_path = Path(db_path)
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=db_path)
     try:
         conn.executescript(PREDICTION_SCHEMA_SQL)
         conn.commit()
@@ -111,7 +112,7 @@ def record_prediction(
     # Ensure schema exists
     ensure_prediction_schema(db_path)
 
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=db_path)
     try:
         conn.execute(
             """INSERT INTO prediction_records
@@ -164,7 +165,7 @@ def record_actual(
         prediction_id: The prediction to update.
         actual_value: The observed PM2.5 value.
     """
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=db_path)
     try:
         error = abs(actual_value)  # placeholder; actual calc below
         conn.execute(
@@ -200,8 +201,7 @@ def get_recent_predictions(
     Returns:
         List of prediction record dicts.
     """
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
+    conn = get_db_connection(row_factory=sqlite3.Row, db_path=db_path)
     try:
         if horizon is not None:
             rows = conn.execute(
@@ -227,7 +227,7 @@ def count_predictions(db_path: str | Path) -> dict[str, Any]:
     Returns:
         Dict with total count, counts by horizon, and avg prediction error.
     """
-    conn = sqlite3.connect(str(db_path))
+    conn = get_db_connection(db_path=db_path)
     try:
         total = conn.execute(
             "SELECT COUNT(*) FROM prediction_records"

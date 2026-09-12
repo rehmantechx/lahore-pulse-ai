@@ -20,6 +20,8 @@ from pathlib import Path
 
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 from .verification_schemas import (
     MIN_SAMPLE_FOR_STATS,
     HypothesisVerification,
@@ -51,7 +53,9 @@ def _parse_context(row: sqlite3.Row) -> dict | None:
 
 
 def _get_write_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a write connection with WAL mode and foreign keys."""
+    """Open a write connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(row_factory=sqlite3.Row)
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
@@ -60,11 +64,9 @@ def _get_write_connection(db_path: Path) -> sqlite3.Connection:
 
 
 def _get_read_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a read-only connection.
-
-    Uses file: URI for read-only mode. On Windows, forward-slashes
-    are required for the URI to parse correctly.
-    """
+    """Open a read-only connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(read_only=True, row_factory=sqlite3.Row)
     # Normalize path for URI: forward slashes, no leading slash on Windows
     uri_path = str(db_path).replace("\\", "/")
     # On Windows paths like C:/..., need to prefix with an extra slash

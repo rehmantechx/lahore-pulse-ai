@@ -23,6 +23,8 @@ from pathlib import Path
 
 from loguru import logger
 
+from ...core.db import get_db_connection, is_cloud_db
+
 from ...modeling.serving.learning_schemas import (
     EvidenceStatus,
     InvestigationContextSnapshot,
@@ -123,7 +125,9 @@ STATUS_SCORES = {
 
 
 def _get_read_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a read-only connection."""
+    """Open a read-only connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(read_only=True, row_factory=sqlite3.Row)
     uri_path = str(db_path).replace("\\", "/")
     if len(uri_path) >= 2 and uri_path[1] == ":":
         uri_path = "/" + uri_path
@@ -133,7 +137,9 @@ def _get_read_connection(db_path: Path) -> sqlite3.Connection:
 
 
 def _get_write_connection(db_path: Path) -> sqlite3.Connection:
-    """Open a write connection with WAL mode."""
+    """Open a write connection (SQLite or PostgreSQL)."""
+    if is_cloud_db():
+        return get_db_connection(row_factory=sqlite3.Row)
     conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")

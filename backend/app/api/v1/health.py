@@ -11,6 +11,7 @@ when they are not configured yet.
 from __future__ import annotations
 
 import asyncio
+import sqlite3
 import threading
 import time
 from datetime import UTC, datetime
@@ -19,6 +20,7 @@ from pathlib import Path
 from fastapi import APIRouter
 
 from ...core.config import get_settings
+from ...core.db import get_db_connection, db_exists, is_cloud_db
 
 router = APIRouter(tags=["health"])
 
@@ -96,36 +98,36 @@ def _get_readiness_cached() -> dict:
 
 def _check_database(db_path: Path) -> dict:
     """Check database health: existence, size, and record counts."""
-    if not db_path.exists():
+    # In cloud mode, DB is always accessible; in local mode, check the specific path
+    if not is_cloud_db() and not db_path.exists():
         return {
             "status": "not_configured",
-            "message": "Database file not found",
+            "message": "Database not found",
         }
 
-    size_bytes = db_path.stat().st_size
-    size_mb = round(size_bytes / (1024 * 1024), 1)
-
-    if size_bytes == 0:
-        return {
-            "status": "not_configured",
-            "message": "Database file is empty",
-        }
+    # File size is only meaningful for local SQLite
+    size_mb = None
+    if not is_cloud_db() and db_path.exists() and db_path.stat().st_size > 0:
+        size_mb = round(db_path.stat().st_size / (1024 * 1024), 1)
 
     try:
-        import sqlite3
-        conn = sqlite3.connect(str(db_path), timeout=5)
+        conn = get_db_connection(read_only=True)
         count = conn.execute("SELECT COUNT(*) FROM observations WHERE observation_type = 'observation'").fetchone()[0]
         conn.close()
-        return {
+        result: dict = {
             "status": "available",
-            "size_mb": size_mb,
             "observation_count": count,
         }
+        if size_mb is not None:
+            result["size_mb"] = size_mb
+        elif is_cloud_db():
+            result["provider"] = "layerbase"
+        return result
     except Exception:
         return {
             "status": "degraded",
             "message": "Database readable but query failed",
-            "size_mb": size_mb,
+            **({"size_mb": size_mb} if size_mb else {}),
         }
 
 
@@ -156,12 +158,11 @@ def _check_data_freshness(db_path: Path) -> dict:
 
 def _check_predictions(db_path: Path) -> dict:
     """Check prediction accountability: how many predictions have been verified."""
-    if not db_path.exists():
+    if not db_exists():
         return {"status": "not_configured"}
 
     try:
-        import sqlite3
-        conn = sqlite3.connect(str(db_path), timeout=5)
+        conn = get_db_connection(read_only=True)
         total = conn.execute("SELECT COUNT(*) FROM prediction_records").fetchone()[0]
         if total == 0:
             conn.close()
